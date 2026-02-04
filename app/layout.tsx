@@ -10,7 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://brewiq.ai"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_APP_URL?.startsWith("http")
+      ? process.env.NEXT_PUBLIC_APP_URL
+      : `https://${process.env.NEXT_PUBLIC_APP_URL || "brewiq.ai"}`
+  ),
   title: {
     default: "BrewIQ - Discover & Rate Craft Beer",
     template: "%s | BrewIQ",
