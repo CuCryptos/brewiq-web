@@ -4,49 +4,52 @@
 
 @layer base {
   :root {
-    --background: #FAFAF9;
-    --foreground: #1C1917;
+    /* BrewIQ Brand Kit Colors */
+    --background: #FFF8ED;
+    --foreground: #1A1208;
     --card: #FFFFFF;
-    --card-foreground: #1C1917;
+    --card-foreground: #1A1208;
     --popover: #FFFFFF;
-    --popover-foreground: #1C1917;
-    --primary: #F59E0B;
-    --primary-foreground: #1C1917;
-    --secondary: #B45309;
-    --secondary-foreground: #FFFFFF;
-    --muted: #F5F5F4;
-    --muted-foreground: #78716C;
-    --accent: #FEF3C7;
-    --accent-foreground: #92400E;
+    --popover-foreground: #1A1208;
+    --primary: #D4890F;
+    --primary-foreground: #1A1208;
+    --secondary: #00D4AA;
+    --secondary-foreground: #1A1208;
+    --muted: #F5E6C8;
+    --muted-foreground: #7A6838;
+    --accent: #FFF8ED;
+    --accent-foreground: #9C630B;
     --destructive: #EF4444;
     --destructive-foreground: #FFFFFF;
-    --border: #E7E5E4;
-    --input: #E7E5E4;
-    --ring: #F59E0B;
+    --border: #E8C896;
+    --input: #E8C896;
+    --ring: #D4890F;
+    --signal: #00D4AA;
     --radius: 0.75rem;
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: #1C1917;
-      --foreground: #FAFAF9;
-      --card: #292524;
-      --card-foreground: #FAFAF9;
-      --popover: #292524;
-      --popover-foreground: #FAFAF9;
-      --primary: #F59E0B;
-      --primary-foreground: #1C1917;
-      --secondary: #D97706;
-      --secondary-foreground: #1C1917;
-      --muted: #44403C;
-      --muted-foreground: #A8A29E;
-      --accent: #78350F;
-      --accent-foreground: #FDE68A;
+      --background: #1A1208;
+      --foreground: #FFF8ED;
+      --card: #2C1E0F;
+      --card-foreground: #FFF8ED;
+      --popover: #2C1E0F;
+      --popover-foreground: #FFF8ED;
+      --primary: #D4890F;
+      --primary-foreground: #1A1208;
+      --secondary: #00D4AA;
+      --secondary-foreground: #1A1208;
+      --muted: #3E350D;
+      --muted-foreground: #A89060;
+      --accent: #4C4010;
+      --accent-foreground: #F5E6C8;
       --destructive: #EF4444;
       --destructive-foreground: #FFFFFF;
-      --border: #44403C;
-      --input: #44403C;
-      --ring: #F59E0B;
+      --border: #3E350D;
+      --input: #3E350D;
+      --ring: #D4890F;
+      --signal: #00D4AA;
     }
   }
 }
@@ -92,7 +95,28 @@
 
   /* Beer gradient backgrounds */
   .bg-beer-gradient {
-    @apply bg-gradient-to-br from-amber-400 via-amber-500 to-copper;
+    @apply bg-gradient-to-br from-amber-400 via-amber to-copper;
+  }
+
+  /* AI/Signal accent styling */
+  .bg-signal-gradient {
+    background: linear-gradient(135deg, #00D4AA 0%, #00A888 100%);
+  }
+
+  .text-signal {
+    color: var(--signal);
+  }
+
+  .border-signal {
+    border-color: var(--signal);
+  }
+
+  .ai-badge {
+    @apply bg-signal text-stout-800 font-ui text-xs font-medium px-2 py-0.5 rounded-full;
+  }
+
+  .ai-glow {
+    box-shadow: 0 0 20px rgba(0, 212, 170, 0.3);
   }
 
   /* IQ Score tier badges */
