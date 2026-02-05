@@ -1,6 +1,6 @@
 import axios, { type AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://brewiq-api-production.up.railway.app";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://brewiq-api-production.up.railway.app/api";
 
 // Token storage keys
 const ACCESS_TOKEN_KEY = "brewiq_access_token";
@@ -114,6 +114,8 @@ api.interceptors.response.use(
     try {
       const response = await axios.post(`${API_URL}/auth/refresh`, {
         refreshToken,
+      }, {
+        headers: { "Content-Type": "application/json" },
       });
 
       const { accessToken, refreshToken: newRefreshToken } = response.data;
