@@ -12,7 +12,8 @@ import {
   Star,
   Zap,
 } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { buttonVariants } from "@/components/ui/Button";
+import { cn } from "@/lib/utils/cn";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { SkeletonBeerCard } from "@/components/ui/Skeleton";
@@ -31,7 +32,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber via-amber-500 to-copper p-6 sm:p-8 lg:p-12">
         <div className="relative z-10 max-w-2xl">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stout-800">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stout-800 text-balance">
             {isAuthenticated
               ? `Welcome back, ${user?.displayName || user?.username}!`
               : "Discover Your Next Favorite Beer"}
@@ -39,17 +40,15 @@ export default function HomePage() {
           <p className="mt-3 text-stout-700/90 sm:text-lg max-w-lg">
             Scan any beer to get instant AI-powered insights, ratings, and personalized recommendations.
           </p>
-          <Link href="/scan">
-            <Button size="xl" className="mt-6 bg-stout-800 text-white hover:bg-stout-700">
+          <Link href="/scan" className={cn(buttonVariants({ size: "xl" }), "mt-6 bg-stout-800 text-white hover:bg-stout-700")}>
               <Camera className="mr-2 h-5 w-5" />
               Scan a Beer
-            </Button>
           </Link>
         </div>
         {/* Decorative elements */}
         <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute -bottom-20 right-20 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute top-1/2 right-10 text-6xl sm:text-8xl opacity-20">
+        <div className="absolute top-1/2 right-10 text-6xl sm:text-8xl opacity-20" aria-hidden="true" role="img">
           🍺
         </div>
       </section>
@@ -247,13 +246,9 @@ export default function HomePage() {
                 and connecting with fellow beer enthusiasts.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-                <Link href="/register">
-                  <Button size="lg">Get Started Free</Button>
-                </Link>
-                <Link href="/login">
-                  <Button variant="outline" size="lg">
+                <Link href="/register" className={buttonVariants({ size: "lg" })}>Get Started Free</Link>
+                <Link href="/login" className={buttonVariants({ variant: "outline", size: "lg" })}>
                     Sign In
-                  </Button>
                 </Link>
               </div>
             </CardContent>

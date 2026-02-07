@@ -25,9 +25,7 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    optimizePackageImports: ['lucide-react'],
-  },
+  optimizePackageImports: ['lucide-react'],
 };
 
 export default nextConfig;

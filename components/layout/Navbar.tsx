@@ -98,7 +98,7 @@ export function Navbar() {
               <>
                 {/* Notifications */}
                 <Link href="/notifications">
-                  <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+                  <Button variant="ghost" size="icon" className="relative" aria-label={unreadCount > 0 ? `${unreadCount} unread notifications` : "Notifications"}>
                     <Bell className="h-5 w-5" />
                     {unreadCount > 0 && (
                       <Badge

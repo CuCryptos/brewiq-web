@@ -105,6 +105,7 @@ export default function BeerDetailPage() {
                 fill
                 className="object-cover"
                 priority
+                fetchPriority="high"
                 sizes="(max-width: 1024px) 100vw, 33vw"
               />
             ) : (

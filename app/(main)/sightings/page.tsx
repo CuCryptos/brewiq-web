@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import Link from "next/link";
 import { MapPin, List, Plus, Navigation } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -45,11 +45,9 @@ function SightingsPageContent() {
           </p>
         </div>
         {isAuthenticated && (
-          <Link href="/sightings/new">
-            <Button>
+          <Link href="/sightings/new" className={buttonVariants()}>
               <Plus className="h-4 w-4 mr-2" />
               Report Sighting
-            </Button>
           </Link>
         )}
       </div>
@@ -134,13 +132,9 @@ function SightingsPageContent() {
               description="Be the first to report a beer sighting in your area!"
               action={
                 isAuthenticated ? (
-                  <Link href="/sightings/new">
-                    <Button>Report Sighting</Button>
-                  </Link>
+                  <Link href="/sightings/new" className={buttonVariants()}>Report Sighting</Link>
                 ) : (
-                  <Link href="/login">
-                    <Button>Sign in to report</Button>
-                  </Link>
+                  <Link href="/login" className={buttonVariants()}>Sign in to report</Link>
                 )
               }
             />

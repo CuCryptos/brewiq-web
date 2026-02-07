@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, ArrowLeft, CheckCircle } from "lucide-react";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonVariants } from "@/components/ui/Button";
+import { cn } from "@/lib/utils/cn";
 import { Input } from "@/components/ui/Input";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/Card";
 import { forgotPasswordSchema, type ForgotPasswordInput } from "@/lib/utils/validation";
@@ -60,11 +61,9 @@ export default function ForgotPasswordPage() {
               try another email
             </button>
           </p>
-          <Link href="/login">
-            <Button variant="outline" className="mt-6">
+          <Link href="/login" className={cn(buttonVariants({ variant: "outline" }), "mt-6")}>
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to login
-            </Button>
           </Link>
         </CardContent>
       </Card>
@@ -96,11 +95,9 @@ export default function ForgotPasswordPage() {
           </Button>
         </form>
 
-        <Link href="/login">
-          <Button variant="ghost" className="w-full mt-4">
+        <Link href="/login" className={cn(buttonVariants({ variant: "ghost" }), "w-full mt-4")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to login
-          </Button>
         </Link>
       </CardContent>
     </Card>

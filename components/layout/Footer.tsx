@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Beer } from "lucide-react";
 
-const footerLinks = {
+const footerLinks: Record<string, { href: string; label: string }[]> = {
   product: [
     { href: "/beers", label: "Discover Beers" },
     { href: "/breweries", label: "Breweries" },
@@ -89,7 +89,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors"
-                  aria-label={social.label}
+                  aria-label={`${social.label} (opens in new tab)`}
                 >
                   {social.icon}
                 </a>

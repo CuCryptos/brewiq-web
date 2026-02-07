@@ -84,6 +84,7 @@ export default function BreweryDetailPage() {
               fill
               className="object-cover"
               priority
+              fetchPriority="high"
               sizes="(max-width: 896px) 100vw, 896px"
             />
           )}
