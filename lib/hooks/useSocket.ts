@@ -1,11 +1,21 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import { io, type Socket } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 import { getAccessToken } from "@/lib/api/client";
 import { useAuthStore } from "@/lib/stores/authStore";
 
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || "https://brewiq-api-production.up.railway.app";
+
+// Lazy-load socket.io-client to reduce initial bundle size
+let ioModule: typeof import("socket.io-client") | null = null;
+
+async function getIO() {
+  if (!ioModule) {
+    ioModule = await import("socket.io-client");
+  }
+  return ioModule.io;
+}
 
 interface UseSocketOptions {
   autoConnect?: boolean;
@@ -27,7 +37,7 @@ export function useSocket(options: UseSocketOptions = {}) {
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
-  const connect = useCallback(() => {
+  const connect = useCallback(async () => {
     if (socketRef.current?.connected) return;
 
     const token = getAccessToken();
@@ -35,6 +45,8 @@ export function useSocket(options: UseSocketOptions = {}) {
       setConnectionError("Not authenticated");
       return;
     }
+
+    const io = await getIO();
 
     socketRef.current = io(SOCKET_URL, {
       auth: { token },

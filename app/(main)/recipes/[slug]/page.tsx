@@ -170,19 +170,19 @@ export default function RecipeDetailPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Original Gravity</p>
-            <p className="font-medium text-foreground">{recipe.originalGravity.toFixed(3)}</p>
+            <p className="font-medium text-foreground">{(recipe.originalGravity ?? 0).toFixed(3)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Final Gravity</p>
-            <p className="font-medium text-foreground">{recipe.finalGravity.toFixed(3)}</p>
+            <p className="font-medium text-foreground">{(recipe.finalGravity ?? 0).toFixed(3)}</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">ABV</p>
-            <p className="font-medium text-foreground">{recipe.abv.toFixed(1)}%</p>
+            <p className="font-medium text-foreground">{(recipe.abv ?? 0).toFixed(1)}%</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">IBU</p>
-            <p className="font-medium text-foreground">{recipe.ibu}</p>
+            <p className="font-medium text-foreground">{recipe.ibu ?? 0}</p>
           </div>
         </div>
       </Card>

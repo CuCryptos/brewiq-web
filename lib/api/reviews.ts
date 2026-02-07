@@ -1,6 +1,12 @@
 import { api } from "./client";
 import type { Review, PaginatedResponse } from "@/lib/types";
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface CreateReviewParams {
   beerId: string;
   rating: number;
@@ -16,13 +22,13 @@ export interface UpdateReviewParams {
 
 export const reviewsApi = {
   async create(params: CreateReviewParams): Promise<Review> {
-    const response = await api.post<Review>("/reviews", params);
-    return response.data;
+    const response = await api.post<ApiResponse<Review>>("/reviews", params);
+    return response.data.data;
   },
 
   async update(reviewId: string, params: UpdateReviewParams): Promise<Review> {
-    const response = await api.patch<Review>(`/reviews/${reviewId}`, params);
-    return response.data;
+    const response = await api.patch<ApiResponse<Review>>(`/reviews/${reviewId}`, params);
+    return response.data.data;
   },
 
   async delete(reviewId: string): Promise<void> {
@@ -30,22 +36,22 @@ export const reviewsApi = {
   },
 
   async getById(reviewId: string): Promise<Review> {
-    const response = await api.get<Review>(`/reviews/${reviewId}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Review>>(`/reviews/${reviewId}`);
+    return response.data.data;
   },
 
   async getRecent(page = 1, limit = 20): Promise<PaginatedResponse<Review>> {
-    const response = await api.get<PaginatedResponse<Review>>("/reviews", {
+    const response = await api.get<ApiResponse<PaginatedResponse<Review>>>("/reviews", {
       params: { page, limit, sortBy: "createdAt", sortOrder: "desc" },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getUserReviews(userId: string, page = 1, limit = 20): Promise<PaginatedResponse<Review>> {
-    const response = await api.get<PaginatedResponse<Review>>(`/users/${userId}/reviews`, {
+    const response = await api.get<ApiResponse<PaginatedResponse<Review>>>(`/users/${userId}/reviews`, {
       params: { page, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async markHelpful(reviewId: string): Promise<void> {

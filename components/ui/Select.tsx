@@ -36,6 +36,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           <select
             id={selectId}
             ref={ref}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={error ? `${selectId}-error` : undefined}
             className={cn(
               "flex h-11 w-full appearance-none rounded-lg border border-input bg-card px-4 py-2 pr-10 text-sm text-foreground shadow-sm transition-colors",
               "focus:border-amber focus:outline-none focus:ring-2 focus:ring-amber/20",
@@ -58,7 +60,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </select>
           <ChevronDown className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
         </div>
-        {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+        {error && <p id={`${selectId}-error`} role="alert" className="mt-1.5 text-sm text-destructive">{error}</p>}
         {hint && !error && <p className="mt-1.5 text-sm text-muted-foreground">{hint}</p>}
       </div>
     );

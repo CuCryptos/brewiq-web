@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Settings, Beer, Bookmark, Heart, Star, Camera } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -224,10 +225,11 @@ function ProfilePageContent() {
                   <div className="flex items-center gap-4">
                     <div className="relative h-16 w-16 rounded-lg bg-muted overflow-hidden shrink-0">
                       {scan.imageUrl ? (
-                        <img
+                        <Image
                           src={scan.imageUrl}
                           alt="Scan"
-                          className="h-full w-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-2xl">

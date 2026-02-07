@@ -87,7 +87,8 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="focus:outline-2 focus:outline-offset-2 focus:outline-primary rounded-sm"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -110,7 +111,8 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="focus:outline-none"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                className="focus:outline-2 focus:outline-offset-2 focus:outline-primary rounded-sm"
               >
                 {showConfirmPassword ? (
                   <EyeOff className="h-4 w-4" />

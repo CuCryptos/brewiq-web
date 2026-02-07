@@ -228,12 +228,12 @@ export default function BreweryDetailPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Total Beers</span>
-                  <span className="text-foreground">{brewery.beersCount}</span>
+                  <span className="text-foreground">{brewery.beersCount ?? 0}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Average Rating</span>
                   <span className="text-foreground">
-                    {brewery.averageRating.toFixed(1)} / 5.0
+                    {(brewery.averageRating ?? 0).toFixed(1)} / 5.0
                   </span>
                 </div>
               </div>

@@ -76,7 +76,8 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="focus:outline-2 focus:outline-offset-2 focus:outline-primary rounded-sm"
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />

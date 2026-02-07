@@ -12,12 +12,12 @@ const config: Config = {
       colors: {
         // BrewIQ Brand Kit Colors
         amber: {
-          DEFAULT: "#D4890F",
+          DEFAULT: "#9A6200",
           50: "#FFF8ED",
           100: "#F5E6C8",
           200: "#E8C896",
           300: "#DBAA64",
-          400: "#D4890F",
+          400: "#9A6200",
           500: "#B8760D",
           600: "#9C630B",
           700: "#805009",
@@ -73,7 +73,7 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: {
-          DEFAULT: "#D4890F",
+          DEFAULT: "#9A6200",
           foreground: "#1A1208",
         },
         secondary: {
@@ -94,7 +94,7 @@ const config: Config = {
         },
         border: "#E8C896",
         input: "#E8C896",
-        ring: "#D4890F",
+        ring: "#9A6200",
         card: {
           DEFAULT: "#FFFFFF",
           foreground: "#1A1208",
@@ -112,7 +112,7 @@ const config: Config = {
         "2xl": "1.5rem",
       },
       boxShadow: {
-        beer: "0 4px 14px 0 rgba(212, 137, 15, 0.15)",
+        beer: "0 4px 14px 0 rgba(154, 98, 0, 0.15)",
         signal: "0 4px 14px 0 rgba(0, 212, 170, 0.20)",
         card: "0 2px 8px 0 rgba(26, 18, 8, 0.08)",
         "card-hover": "0 8px 24px 0 rgba(26, 18, 8, 0.12)",
@@ -151,7 +151,7 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-beer":
-          "linear-gradient(135deg, #D4890F 0%, #B8760D 50%, #9C630B 100%)",
+          "linear-gradient(135deg, #9A6200 0%, #B8760D 50%, #9C630B 100%)",
         "gradient-signal":
           "linear-gradient(135deg, #00D4AA 0%, #00A888 100%)",
         shimmer:

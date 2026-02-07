@@ -116,8 +116,8 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
           <div className="flex items-center justify-between mt-3">
             <div className="flex items-center gap-1 text-sm">
               <Star className="h-4 w-4 fill-amber text-amber" />
-              <span className="font-medium">{beer.averageRating.toFixed(1)}</span>
-              <span className="text-muted-foreground">({beer.reviewCount})</span>
+              <span className="font-medium">{(beer.averageRating ?? 0).toFixed(1)}</span>
+              <span className="text-muted-foreground">({beer.reviewCount ?? 0})</span>
             </div>
             <div className="flex gap-1.5">
               <Badge variant="secondary" size="sm">

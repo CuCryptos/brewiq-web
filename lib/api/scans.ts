@@ -1,6 +1,12 @@
 import { api } from "./client";
 import type { Scan, ScanResult, ScanType, PaginatedResponse } from "@/lib/types";
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface CreateScanParams {
   image: File;
   scanType: ScanType;
@@ -12,30 +18,30 @@ export const scansApi = {
     formData.append("image", params.image);
     formData.append("scanType", params.scanType);
 
-    const response = await api.post<Scan>("/scans", formData, {
+    const response = await api.post<ApiResponse<Scan>>("/scans", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
       timeout: 60000, // Longer timeout for image upload
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getById(scanId: string): Promise<Scan> {
-    const response = await api.get<Scan>(`/scans/${scanId}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Scan>>(`/scans/${scanId}`);
+    return response.data.data;
   },
 
   async getResults(scanId: string): Promise<ScanResult[]> {
-    const response = await api.get<ScanResult[]>(`/scans/${scanId}/results`);
-    return response.data;
+    const response = await api.get<ApiResponse<ScanResult[]>>(`/scans/${scanId}/results`);
+    return response.data.data;
   },
 
   async getHistory(page = 1, limit = 20): Promise<PaginatedResponse<Scan>> {
-    const response = await api.get<PaginatedResponse<Scan>>("/scans", {
+    const response = await api.get<ApiResponse<PaginatedResponse<Scan>>>("/scans", {
       params: { page, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async delete(scanId: string): Promise<void> {

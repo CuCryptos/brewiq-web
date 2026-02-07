@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   Camera,
@@ -122,10 +123,11 @@ export default function HomePage() {
                 <CardContent className="flex items-center gap-4">
                   <div className="relative h-16 w-16 rounded-lg bg-muted overflow-hidden">
                     {scan.imageUrl ? (
-                      <img
+                      <Image
                         src={scan.imageUrl}
                         alt="Scan"
-                        className="h-full w-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-2xl">

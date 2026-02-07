@@ -21,19 +21,37 @@ export interface ResetPasswordParams {
   password: string;
 }
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
+interface AuthData {
+  accessToken: string;
+  refreshToken: string;
+  user: User;
+}
+
 export const authApi = {
   async login(params: LoginParams): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>("/auth/login", params);
-    const { tokens } = response.data;
-    setTokens(tokens.accessToken, tokens.refreshToken);
-    return response.data;
+    const response = await api.post<ApiResponse<AuthData>>("/auth/login", params);
+    const { accessToken, refreshToken, user } = response.data.data;
+    setTokens(accessToken, refreshToken);
+    return {
+      user,
+      tokens: { accessToken, refreshToken },
+    };
   },
 
   async register(params: RegisterParams): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>("/auth/register", params);
-    const { tokens } = response.data;
-    setTokens(tokens.accessToken, tokens.refreshToken);
-    return response.data;
+    const response = await api.post<ApiResponse<AuthData>>("/auth/register", params);
+    const { accessToken, refreshToken, user } = response.data.data;
+    setTokens(accessToken, refreshToken);
+    return {
+      user,
+      tokens: { accessToken, refreshToken },
+    };
   },
 
   async logout(): Promise<void> {
@@ -55,14 +73,15 @@ export const authApi = {
   },
 
   async getMe(): Promise<User> {
-    const response = await api.get<User>("/auth/me");
-    return response.data;
+    const response = await api.get<ApiResponse<User>>("/auth/me");
+    return response.data.data;
   },
 
   async refreshTokens(refreshToken: string): Promise<AuthTokens> {
-    const response = await api.post<AuthTokens>("/auth/refresh", { refreshToken });
-    setTokens(response.data.accessToken, response.data.refreshToken);
-    return response.data;
+    const response = await api.post<ApiResponse<{ accessToken: string; refreshToken: string }>>("/auth/refresh", { refreshToken });
+    const { accessToken, refreshToken: newRefreshToken } = response.data.data;
+    setTokens(accessToken, newRefreshToken);
+    return { accessToken, refreshToken: newRefreshToken };
   },
 
   // OAuth URLs
@@ -78,10 +97,13 @@ export const authApi = {
     return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=user:email`;
   },
 
-  async handleOAuthCallback(provider: string, code: string): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>(`/auth/${provider}/callback`, { code });
-    const { tokens } = response.data;
-    setTokens(tokens.accessToken, tokens.refreshToken);
-    return response.data;
+  async handleOAuthCallback(_provider: string, code: string): Promise<LoginResponse> {
+    const response = await api.post<ApiResponse<AuthData>>("/auth/oauth/exchange", { code });
+    const { accessToken, refreshToken, user } = response.data.data;
+    setTokens(accessToken, refreshToken);
+    return {
+      user,
+      tokens: { accessToken, refreshToken },
+    };
   },
 };

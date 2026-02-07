@@ -97,11 +97,11 @@ export function BreweryCard({ brewery, variant = "default" }: BreweryCardProps) 
           <div className="flex items-center gap-4 mt-4 pt-3 border-t border-border">
             <div className="flex items-center gap-1 text-sm">
               <Star className="h-4 w-4 fill-amber text-amber" />
-              <span className="font-medium">{brewery.averageRating.toFixed(1)}</span>
+              <span className="font-medium">{(brewery.averageRating ?? 0).toFixed(1)}</span>
             </div>
             <div className="flex items-center gap-1 text-sm text-muted-foreground">
               <Beer className="h-4 w-4" />
-              {brewery.beersCount} beers
+              {brewery.beersCount ?? 0} beers
             </div>
           </div>
         </div>

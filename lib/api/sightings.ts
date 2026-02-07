@@ -1,6 +1,12 @@
 import { api } from "./client";
 import type { Sighting, SightingSearchParams, PaginatedResponse, BeerFormat } from "@/lib/types";
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface CreateSightingParams {
   beerId: string;
   locationName: string;
@@ -31,17 +37,17 @@ export const sightingsApi = {
       formData.append("image", params.image);
     }
 
-    const response = await api.post<Sighting>("/sightings", formData, {
+    const response = await api.post<ApiResponse<Sighting>>("/sightings", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async search(params: SightingSearchParams = {}): Promise<PaginatedResponse<Sighting>> {
-    const response = await api.get<PaginatedResponse<Sighting>>("/sightings", { params });
-    return response.data;
+    const response = await api.get<ApiResponse<PaginatedResponse<Sighting>>>("/sightings", { params });
+    return response.data.data;
   },
 
   async getNearby(
@@ -50,22 +56,22 @@ export const sightingsApi = {
     radius = 10,
     limit = 20
   ): Promise<Sighting[]> {
-    const response = await api.get<Sighting[]>("/sightings/nearby", {
+    const response = await api.get<ApiResponse<Sighting[]>>("/sightings/nearby", {
       params: { latitude, longitude, radius, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getForBeer(beerId: string, page = 1, limit = 20): Promise<PaginatedResponse<Sighting>> {
-    const response = await api.get<PaginatedResponse<Sighting>>(`/beers/${beerId}/sightings`, {
+    const response = await api.get<ApiResponse<PaginatedResponse<Sighting>>>(`/beers/${beerId}/sightings`, {
       params: { page, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getById(sightingId: string): Promise<Sighting> {
-    const response = await api.get<Sighting>(`/sightings/${sightingId}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Sighting>>(`/sightings/${sightingId}`);
+    return response.data.data;
   },
 
   async confirm(sightingId: string): Promise<void> {

@@ -1,6 +1,12 @@
 import { api } from "./client";
 import type { Recipe, PaginatedResponse } from "@/lib/types";
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface RecipeSearchParams {
   query?: string;
   style?: string;
@@ -45,28 +51,28 @@ export interface CreateRecipeParams {
 
 export const recipesApi = {
   async search(params: RecipeSearchParams = {}): Promise<PaginatedResponse<Recipe>> {
-    const response = await api.get<PaginatedResponse<Recipe>>("/recipes", { params });
-    return response.data;
+    const response = await api.get<ApiResponse<PaginatedResponse<Recipe>>>("/recipes", { params });
+    return response.data.data;
   },
 
   async getBySlug(slug: string): Promise<Recipe> {
-    const response = await api.get<Recipe>(`/recipes/${slug}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Recipe>>(`/recipes/${slug}`);
+    return response.data.data;
   },
 
   async getById(id: string): Promise<Recipe> {
-    const response = await api.get<Recipe>(`/recipes/id/${id}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Recipe>>(`/recipes/id/${id}`);
+    return response.data.data;
   },
 
   async create(params: CreateRecipeParams): Promise<Recipe> {
-    const response = await api.post<Recipe>("/recipes", params);
-    return response.data;
+    const response = await api.post<ApiResponse<Recipe>>("/recipes", params);
+    return response.data.data;
   },
 
   async update(recipeId: string, params: Partial<CreateRecipeParams>): Promise<Recipe> {
-    const response = await api.patch<Recipe>(`/recipes/${recipeId}`, params);
-    return response.data;
+    const response = await api.patch<ApiResponse<Recipe>>(`/recipes/${recipeId}`, params);
+    return response.data.data;
   },
 
   async delete(recipeId: string): Promise<void> {
@@ -74,8 +80,8 @@ export const recipesApi = {
   },
 
   async fork(recipeId: string): Promise<Recipe> {
-    const response = await api.post<Recipe>(`/recipes/${recipeId}/fork`);
-    return response.data;
+    const response = await api.post<ApiResponse<Recipe>>(`/recipes/${recipeId}/fork`);
+    return response.data.data;
   },
 
   async markBrewed(recipeId: string): Promise<void> {
@@ -83,19 +89,19 @@ export const recipesApi = {
   },
 
   async generateClone(beerId: string): Promise<Recipe> {
-    const response = await api.post<Recipe>(`/beers/${beerId}/clone-recipe`);
-    return response.data;
+    const response = await api.post<ApiResponse<Recipe>>(`/beers/${beerId}/clone-recipe`);
+    return response.data.data;
   },
 
   async getMyRecipes(page = 1, limit = 20): Promise<PaginatedResponse<Recipe>> {
-    const response = await api.get<PaginatedResponse<Recipe>>("/recipes/mine", {
+    const response = await api.get<ApiResponse<PaginatedResponse<Recipe>>>("/recipes/mine", {
       params: { page, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getPopular(limit = 10): Promise<Recipe[]> {
-    const response = await api.get<Recipe[]>("/recipes/popular", { params: { limit } });
-    return response.data;
+    const response = await api.get<ApiResponse<Recipe[]>>("/recipes/popular", { params: { limit } });
+    return response.data.data;
   },
 };

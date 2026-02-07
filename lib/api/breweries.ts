@@ -1,6 +1,12 @@
 import { api } from "./client";
 import type { Brewery, Beer, PaginatedResponse } from "@/lib/types";
 
+// API wraps responses in { success: boolean, data: T }
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export interface BrewerySearchParams {
   query?: string;
   country?: string;
@@ -14,30 +20,30 @@ export interface BrewerySearchParams {
 
 export const breweriesApi = {
   async search(params: BrewerySearchParams = {}): Promise<PaginatedResponse<Brewery>> {
-    const response = await api.get<PaginatedResponse<Brewery>>("/breweries", { params });
-    return response.data;
+    const response = await api.get<ApiResponse<PaginatedResponse<Brewery>>>("/breweries", { params });
+    return response.data.data;
   },
 
   async getBySlug(slug: string): Promise<Brewery> {
-    const response = await api.get<Brewery>(`/breweries/${slug}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Brewery>>(`/breweries/${slug}`);
+    return response.data.data;
   },
 
   async getById(id: string): Promise<Brewery> {
-    const response = await api.get<Brewery>(`/breweries/id/${id}`);
-    return response.data;
+    const response = await api.get<ApiResponse<Brewery>>(`/breweries/id/${id}`);
+    return response.data.data;
   },
 
   async getBeers(breweryId: string, page = 1, limit = 20): Promise<PaginatedResponse<Beer>> {
-    const response = await api.get<PaginatedResponse<Beer>>(`/breweries/${breweryId}/beers`, {
+    const response = await api.get<ApiResponse<PaginatedResponse<Beer>>>(`/breweries/${breweryId}/beers`, {
       params: { page, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 
   async getPopular(limit = 10): Promise<Brewery[]> {
-    const response = await api.get<Brewery[]>("/breweries/popular", { params: { limit } });
-    return response.data;
+    const response = await api.get<ApiResponse<Brewery[]>>("/breweries/popular", { params: { limit } });
+    return response.data.data;
   },
 
   async getNearby(
@@ -46,9 +52,9 @@ export const breweriesApi = {
     radius = 50,
     limit = 10
   ): Promise<Brewery[]> {
-    const response = await api.get<Brewery[]>("/breweries/nearby", {
+    const response = await api.get<ApiResponse<Brewery[]>>("/breweries/nearby", {
       params: { latitude, longitude, radius, limit },
     });
-    return response.data;
+    return response.data.data;
   },
 };

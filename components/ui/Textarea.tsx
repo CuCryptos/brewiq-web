@@ -25,6 +25,8 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
         <textarea
           id={textareaId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${textareaId}-error` : undefined}
           className={cn(
             "flex min-h-[100px] w-full rounded-lg border border-input bg-card px-4 py-3 text-sm text-foreground shadow-sm transition-colors resize-y",
             "placeholder:text-muted-foreground",
@@ -36,7 +38,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           {...props}
         />
-        {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+        {error && <p id={`${textareaId}-error`} role="alert" className="mt-1.5 text-sm text-destructive">{error}</p>}
         {hint && !error && <p className="mt-1.5 text-sm text-muted-foreground">{hint}</p>}
       </div>
     );

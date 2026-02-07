@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import { Upload, X, Camera } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
@@ -72,10 +73,13 @@ export function ImageUpload({ onImageSelect, onOpenCamera, className }: ImageUpl
   if (preview) {
     return (
       <div className={cn("relative rounded-xl overflow-hidden", className)}>
-        <img
+        <Image
           src={preview}
           alt="Selected image"
+          width={640}
+          height={256}
           className="w-full h-64 object-cover"
+          unoptimized
         />
         <button
           onClick={clearPreview}

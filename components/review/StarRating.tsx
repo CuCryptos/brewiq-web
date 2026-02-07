@@ -97,7 +97,7 @@ export function StarRating({
       </div>
       {showValue && (
         <span className="ml-1.5 text-sm font-medium text-foreground">
-          {rating.toFixed(1)}
+          {(rating ?? 0).toFixed(1)}
         </span>
       )}
     </div>
@@ -121,7 +121,7 @@ export function RatingDisplay({
   return (
     <div className={cn("flex items-center gap-1", className)}>
       <Star className={cn(sizeClasses[size], "fill-amber text-amber")} />
-      <span className="font-medium text-foreground">{rating.toFixed(1)}</span>
+      <span className="font-medium text-foreground">{(rating ?? 0).toFixed(1)}</span>
       {count !== undefined && (
         <span className="text-muted-foreground">({count})</span>
       )}

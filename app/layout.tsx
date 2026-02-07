@@ -1,23 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Playfair_Display, Sora, DM_Sans } from "next/font/google";
+import { Sora, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
-// BrewIQ Brand Kit Fonts
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-cormorant",
-  weight: ["400", "500", "600", "700"],
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-playfair",
-  weight: ["400", "500", "600", "700"],
-});
-
+// BrewIQ Brand Kit Fonts — reduced to 2 families for faster loading
 const sora = Sora({
   subsets: ["latin"],
   display: "swap",
@@ -29,7 +15,7 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-dm-sans",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {
@@ -103,7 +89,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${playfair.variable} ${sora.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${sora.variable} ${dmSans.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://brewiq-api-production.up.railway.app" />
+        <link rel="dns-prefetch" href="https://brewiq-api-production.up.railway.app" />
+      </head>
       <body className="font-sans antialiased">
         <Providers>{children}</Providers>
       </body>
