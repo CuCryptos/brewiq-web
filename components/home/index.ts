@@ -1,0 +1,9 @@
+export { AnimateOnScroll } from "./AnimateOnScroll";
+export { HeroSection } from "./HeroSection";
+export { StatsBar } from "./StatsBar";
+export { HowItWorks } from "./HowItWorks";
+export { TrendingSection } from "./TrendingSection";
+export { FeatureGrid } from "./FeatureGrid";
+export { PhilosophySection } from "./PhilosophySection";
+export { SocialProof } from "./SocialProof";
+export { CTASection } from "./CTASection";
