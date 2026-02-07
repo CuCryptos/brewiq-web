@@ -16,6 +16,7 @@ export interface UpdateProfileParams {
   displayName?: string;
   bio?: string;
   avatar?: File;
+  avatarUrl?: string;
 }
 
 export const usersApi = {
@@ -30,6 +31,16 @@ export const usersApi = {
   },
 
   async updateProfile(params: UpdateProfileParams): Promise<User> {
+    // If avatarUrl is provided (from AI generation), send as JSON
+    if (params.avatarUrl) {
+      const response = await api.patch<ApiResponse<User>>("/users/me", {
+        displayName: params.displayName,
+        bio: params.bio,
+        avatarUrl: params.avatarUrl,
+      });
+      return response.data.data;
+    }
+
     const formData = new FormData();
     if (params.displayName) formData.append("displayName", params.displayName);
     if (params.bio) formData.append("bio", params.bio);
