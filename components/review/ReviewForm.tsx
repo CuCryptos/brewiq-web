@@ -89,9 +89,11 @@ export function ReviewForm({ beerId, onSuccess, onCancel }: ReviewFormProps) {
             rating={rating}
             onRatingChange={(value) => setValue("rating", value)}
             size="lg"
+            id="review-rating"
+            aria-describedby={errors.rating ? "review-rating-error" : undefined}
           />
           {errors.rating && (
-            <p className="mt-1 text-sm text-destructive">{errors.rating.message}</p>
+            <p id="review-rating-error" className="mt-1 text-sm text-destructive">{errors.rating.message}</p>
           )}
         </div>
 

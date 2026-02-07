@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin, Search, Loader2 } from "lucide-react";
@@ -43,6 +43,7 @@ export function ReportSightingForm({
   const [beerResults, setBeerResults] = useState<Beer[]>([]);
   const [selectedBeer, setSelectedBeer] = useState<Beer | null>(preselectedBeer || null);
   const [isSearching, setIsSearching] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
   const {
     register,
@@ -93,12 +94,48 @@ export function ReportSightingForm({
     return () => clearTimeout(timer);
   }, [beerSearch, selectedBeer]);
 
-  const handleSelectBeer = (beer: Beer) => {
+  // Reset active index when results change
+  useEffect(() => {
+    setActiveIndex(-1);
+  }, [beerResults]);
+
+  const handleSelectBeer = useCallback((beer: Beer) => {
     setSelectedBeer(beer);
     setValue("beerId", beer.id);
     setBeerSearch("");
     setBeerResults([]);
-  };
+  }, [setValue]);
+
+  const handleBeerSearchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (beerResults.length === 0) return;
+
+      switch (e.key) {
+        case "ArrowDown":
+          e.preventDefault();
+          setActiveIndex((prev) =>
+            prev < beerResults.length - 1 ? prev + 1 : 0
+          );
+          break;
+        case "ArrowUp":
+          e.preventDefault();
+          setActiveIndex((prev) =>
+            prev > 0 ? prev - 1 : beerResults.length - 1
+          );
+          break;
+        case "Enter":
+          if (activeIndex >= 0 && beerResults[activeIndex]) {
+            e.preventDefault();
+            handleSelectBeer(beerResults[activeIndex]);
+          }
+          break;
+        case "Escape":
+          setBeerResults([]);
+          break;
+      }
+    },
+    [beerResults, activeIndex, handleSelectBeer]
+  );
 
   const handleClearBeer = () => {
     setSelectedBeer(null);
@@ -166,16 +203,30 @@ export function ReportSightingForm({
               placeholder="Search for a beer..."
               value={beerSearch}
               onChange={(e) => setBeerSearch(e.target.value)}
+              onKeyDown={handleBeerSearchKeyDown}
               leftIcon={<Search className="h-4 w-4" />}
               rightIcon={isSearching ? <Loader2 className="h-4 w-4 animate-spin" /> : undefined}
               error={errors.beerId?.message}
+              role="combobox"
+              aria-expanded={beerResults.length > 0}
+              aria-autocomplete="list"
+              aria-controls="beer-search-listbox"
+              aria-activedescendant={activeIndex >= 0 ? `beer-option-${beerResults[activeIndex]?.id}` : undefined}
             />
             {beerResults.length > 0 && (
-              <div className="absolute z-10 top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden">
-                {beerResults.map((beer) => (
+              <div
+                id="beer-search-listbox"
+                role="listbox"
+                aria-label="Beer search results"
+                className="absolute z-10 top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
+              >
+                {beerResults.map((beer, index) => (
                   <button
                     key={beer.id}
                     type="button"
+                    role="option"
+                    id={`beer-option-${beer.id}`}
+                    aria-selected={index === activeIndex}
                     onClick={() => handleSelectBeer(beer)}
                     className="w-full flex items-center gap-3 p-3 hover:bg-muted text-left transition-colors"
                   >

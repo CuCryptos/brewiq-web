@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Footer } from "@/components/layout/Footer";
 import { SearchModal } from "@/components/layout/SearchModal";
+
+export const metadata: Metadata = {
+  title: "BrewIQ",
+};
 
 export default function MainLayout({
   children,

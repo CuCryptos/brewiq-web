@@ -11,6 +11,8 @@ interface StarRatingProps {
   size?: "sm" | "md" | "lg";
   showValue?: boolean;
   className?: string;
+  id?: string;
+  "aria-describedby"?: string;
 }
 
 const sizeClasses = {
@@ -26,6 +28,8 @@ export function StarRating({
   size = "md",
   showValue = false,
   className,
+  id,
+  "aria-describedby": ariaDescribedBy,
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const displayRating = hoverRating || rating;
@@ -70,6 +74,8 @@ export function StarRating({
         className="flex"
         role="radiogroup"
         aria-label={readonly ? `Rating: ${rating} out of 5 stars` : "Rating"}
+        aria-describedby={ariaDescribedBy}
+        id={id}
         onKeyDown={handleKeyDown}
       >
         {[1, 2, 3, 4, 5].map((value) => {

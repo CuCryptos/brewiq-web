@@ -1,5 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Beer } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Sign In | BrewIQ",
+};
 
 export default function AuthLayout({
   children,
