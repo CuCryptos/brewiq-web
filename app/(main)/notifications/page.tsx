@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Bell, Check, Camera, Heart, UserPlus, Trophy, GitFork, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -23,6 +24,16 @@ const notificationIcons: Record<NotificationType, React.ReactNode> = {
   level_up: <Star className="h-5 w-5 text-yellow-500" />,
 };
 
+const notificationUrls: Record<NotificationType, string | null> = {
+  scan_complete: "/scan",
+  review_liked: "/profile",
+  new_follower: "/profile",
+  achievement_unlocked: "/achievements",
+  recipe_forked: "/recipes",
+  sighting_confirmed: "/sightings",
+  level_up: "/profile",
+};
+
 function NotificationItem({
   notification,
   onMarkRead,
@@ -30,13 +41,10 @@ function NotificationItem({
   notification: Notification;
   onMarkRead: (id: string) => void;
 }) {
-  return (
-    <div
-      className={cn(
-        "flex items-start gap-3 p-4 rounded-lg transition-colors",
-        notification.isRead ? "bg-transparent" : "bg-amber/5"
-      )}
-    >
+  const url = notificationUrls[notification.type] ?? null;
+
+  const content = (
+    <>
       <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
         {notificationIcons[notification.type]}
       </div>
@@ -47,10 +55,31 @@ function NotificationItem({
           {formatRelativeTime(notification.createdAt)}
         </p>
       </div>
+    </>
+  );
+
+  return (
+    <div
+      className={cn(
+        "flex items-start gap-3 p-4 rounded-lg transition-colors",
+        notification.isRead ? "bg-transparent" : "bg-amber/5"
+      )}
+      {...(!url ? { role: "article" } : {})}
+      aria-label={notification.title}
+    >
+      {url ? (
+        <Link href={url} className="flex items-start gap-3 flex-1 min-w-0">
+          {content}
+        </Link>
+      ) : (
+        <div className="flex items-start gap-3 flex-1 min-w-0">
+          {content}
+        </div>
+      )}
       {!notification.isRead && (
         <button
           onClick={() => onMarkRead(notification.id)}
-          className="text-xs text-amber hover:underline"
+          className="text-xs text-amber hover:underline shrink-0"
         >
           Mark read
         </button>

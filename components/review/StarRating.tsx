@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 
@@ -29,6 +29,23 @@ export function StarRating({
 }: StarRatingProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const displayRating = hoverRating || rating;
+  const groupRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (readonly) return;
+    let next: number | null = null;
+    if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+      next = Math.min((rating || 0) + 1, 5);
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
+      next = Math.max((rating || 0) - 1, 1);
+    }
+    if (next !== null) {
+      e.preventDefault();
+      onRatingChange?.(next);
+      const buttons = groupRef.current?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
+      buttons?.[next - 1]?.focus();
+    }
+  };
 
   const handleClick = (value: number) => {
     if (!readonly && onRatingChange) {
@@ -48,7 +65,13 @@ export function StarRating({
 
   return (
     <div className={cn("flex items-center gap-1", className)}>
-      <div className="flex">
+      <div
+        ref={groupRef}
+        className="flex"
+        role="radiogroup"
+        aria-label={readonly ? `Rating: ${rating} out of 5 stars` : "Rating"}
+        onKeyDown={handleKeyDown}
+      >
         {[1, 2, 3, 4, 5].map((value) => {
           const filled = displayRating >= value;
           const halfFilled = !filled && displayRating >= value - 0.5;
@@ -61,6 +84,9 @@ export function StarRating({
               onMouseEnter={() => handleMouseEnter(value)}
               onMouseLeave={handleMouseLeave}
               disabled={readonly}
+              role="radio"
+              aria-checked={rating === value}
+              tabIndex={rating === value || (rating === 0 && value === 1) ? 0 : -1}
               className={cn(
                 "relative transition-transform",
                 !readonly && "hover:scale-110 cursor-pointer",

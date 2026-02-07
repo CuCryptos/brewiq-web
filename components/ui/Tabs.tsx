@@ -53,9 +53,10 @@ export function Tabs({
 interface TabsListProps {
   children: ReactNode;
   className?: string;
+  "aria-label"?: string;
 }
 
-export function TabsList({ children, className }: TabsListProps) {
+export function TabsList({ children, className, "aria-label": ariaLabel }: TabsListProps) {
   const listRef = useRef<HTMLDivElement>(null);
   const { setActiveTab } = useTabsContext();
 
@@ -102,6 +103,7 @@ export function TabsList({ children, className }: TabsListProps) {
         className
       )}
       role="tablist"
+      aria-label={ariaLabel}
       onKeyDown={handleKeyDown}
     >
       {children}

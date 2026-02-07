@@ -40,6 +40,8 @@ export function Navbar() {
   const profileRef = useRef<HTMLDivElement>(null);
   const profileTriggerRef = useRef<HTMLButtonElement>(null);
   const menuItemsRef = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>([]);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -73,6 +75,18 @@ export function Navbar() {
       });
     }
   }, [isProfileOpen]);
+
+  // Mobile nav focus management
+  useEffect(() => {
+    if (isMobileNavOpen) {
+      requestAnimationFrame(() => {
+        const firstLink = mobileMenuRef.current?.querySelector<HTMLAnchorElement>("a");
+        firstLink?.focus();
+      });
+    } else {
+      mobileMenuButtonRef.current?.focus();
+    }
+  }, [isMobileNavOpen]);
 
   const handleMenuKeyDown = (e: React.KeyboardEvent) => {
     const items = menuItemsRef.current.filter(Boolean) as HTMLElement[];
@@ -278,11 +292,14 @@ export function Navbar() {
 
             {/* Mobile menu button */}
             <Button
+              ref={mobileMenuButtonRef}
               variant="ghost"
               size="icon"
               className="md:hidden"
               onClick={() => setMobileNavOpen(!isMobileNavOpen)}
               aria-label="Toggle menu"
+              aria-expanded={isMobileNavOpen}
+              aria-controls="mobile-nav-menu"
             >
               {isMobileNavOpen ? (
                 <X className="h-5 w-5" />
@@ -296,7 +313,7 @@ export function Navbar() {
 
       {/* Mobile Navigation */}
       {isMobileNavOpen && (
-        <div className="md:hidden border-t border-border bg-card animate-slide-down">
+        <div ref={mobileMenuRef} id="mobile-nav-menu" className="md:hidden border-t border-border bg-card animate-slide-down">
           <div className="px-4 py-4 space-y-1">
             {navLinks.map((link) => (
               <Link

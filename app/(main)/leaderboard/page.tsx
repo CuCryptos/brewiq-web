@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { Trophy, Medal, Camera, Star, MapPin, Zap } from "lucide-react";
 import { Card } from "@/components/ui/Card";
@@ -120,11 +120,34 @@ export default function LeaderboardPage() {
       </Tabs>
 
       {/* Category */}
-      <div className="flex gap-2 mb-6">
+      <div
+        className="flex gap-2 mb-6"
+        role="radiogroup"
+        aria-label="Leaderboard category"
+        onKeyDown={(e) => {
+          const cats: LeaderboardCategory[] = ["xp", "scans", "reviews", "sightings"];
+          const idx = cats.indexOf(category);
+          let next: number | null = null;
+          if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+            next = (idx + 1) % cats.length;
+          } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            next = (idx - 1 + cats.length) % cats.length;
+          }
+          if (next !== null) {
+            e.preventDefault();
+            setCategory(cats[next]);
+            const buttons = e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="radio"]');
+            buttons[next]?.focus();
+          }
+        }}
+      >
         {(["xp", "scans", "reviews", "sightings"] as LeaderboardCategory[]).map((cat) => (
           <button
             key={cat}
             onClick={() => setCategory(cat)}
+            role="radio"
+            aria-checked={category === cat}
+            tabIndex={category === cat ? 0 : -1}
             className={cn(
               "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
               category === cat
