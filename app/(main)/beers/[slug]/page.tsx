@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import {
   ArrowLeft,
   Heart,
@@ -24,10 +25,14 @@ import { FlavorTags } from "@/components/beer/FlavorTags";
 import { BeerCard } from "@/components/beer/BeerCard";
 import { RatingDisplay } from "@/components/review/StarRating";
 import { ReviewCard } from "@/components/review/ReviewCard";
-import { ReviewForm } from "@/components/review/ReviewForm";
 import { useBeer, useBeerReviews, useSimilarBeers, useSaveBeer, useAddToWishlist, useCheckIn } from "@/lib/hooks/useBeers";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { formatABV, formatIBU } from "@/lib/utils/format";
+
+const ReviewForm = dynamic(
+  () => import("@/components/review/ReviewForm").then((m) => ({ default: m.ReviewForm })),
+  { ssr: false }
+);
 
 export default function BeerDetailPage() {
   const params = useParams();

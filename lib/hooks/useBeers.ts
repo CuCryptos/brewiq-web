@@ -52,6 +52,7 @@ export function useTrendingBeers(limit = 10) {
   return useQuery({
     queryKey: beerKeys.trending(),
     queryFn: () => beersApi.getTrending(limit),
+    staleTime: 600000,
   });
 }
 
@@ -59,6 +60,7 @@ export function useTopRatedBeers(limit = 10) {
   return useQuery({
     queryKey: beerKeys.topRated(),
     queryFn: () => beersApi.getTopRated(limit),
+    staleTime: 600000,
   });
 }
 

@@ -5,8 +5,16 @@ import { Camera, Image as ImageIcon, Menu, Beer, AlertCircle } from "lucide-reac
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
-import { CameraScanner } from "@/components/scan/CameraScanner";
-import { ImageUpload } from "@/components/scan/ImageUpload";
+import dynamic from "next/dynamic";
+
+const CameraScanner = dynamic(
+  () => import("@/components/scan/CameraScanner").then((m) => ({ default: m.CameraScanner })),
+  { ssr: false }
+);
+const ImageUpload = dynamic(
+  () => import("@/components/scan/ImageUpload").then((m) => ({ default: m.ImageUpload })),
+  { ssr: false }
+);
 import { ScanResult } from "@/components/scan/ScanResult";
 import { useCreateScan } from "@/lib/hooks/useScanner";
 import { useRequireAuth } from "@/lib/hooks/useAuth";

@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Navbar } from "@/components/layout/Navbar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { Footer } from "@/components/layout/Footer";
-import { SearchModal } from "@/components/layout/SearchModal";
+
+const SearchModal = dynamic(
+  () => import("@/components/layout/SearchModal").then((m) => ({ default: m.SearchModal })),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "BrewIQ",
