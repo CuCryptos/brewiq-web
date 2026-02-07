@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Recipe, PaginatedResponse } from "@/lib/types";
 
 export interface RecipeSearchParams {
@@ -45,8 +45,8 @@ export interface CreateRecipeParams {
 
 export const recipesApi = {
   async search(params: RecipeSearchParams = {}): Promise<PaginatedResponse<Recipe>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Recipe>>>("/recipes", { params });
-    return response.data.data;
+    const response = await api.get<PaginatedApiResponse<Recipe>>("/recipes", { params });
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getBySlug(slug: string): Promise<Recipe> {
@@ -88,10 +88,10 @@ export const recipesApi = {
   },
 
   async getMyRecipes(page = 1, limit = 20): Promise<PaginatedResponse<Recipe>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Recipe>>>("/recipes/mine", {
+    const response = await api.get<PaginatedApiResponse<Recipe>>("/recipes/mine", {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getPopular(limit = 10): Promise<Recipe[]> {

@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Scan, ScanResult, ScanType, PaginatedResponse } from "@/lib/types";
 
 export interface CreateScanParams {
@@ -32,10 +32,10 @@ export const scansApi = {
   },
 
   async getHistory(page = 1, limit = 20): Promise<PaginatedResponse<Scan>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Scan>>>("/scans", {
+    const response = await api.get<PaginatedApiResponse<Scan>>("/scans", {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async delete(scanId: string): Promise<void> {

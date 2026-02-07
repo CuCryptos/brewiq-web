@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Review, PaginatedResponse } from "@/lib/types";
 
 export interface CreateReviewParams {
@@ -35,17 +35,17 @@ export const reviewsApi = {
   },
 
   async getRecent(page = 1, limit = 20): Promise<PaginatedResponse<Review>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Review>>>("/reviews", {
+    const response = await api.get<PaginatedApiResponse<Review>>("/reviews", {
       params: { page, limit, sortBy: "createdAt", sortOrder: "desc" },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getUserReviews(userId: string, page = 1, limit = 20): Promise<PaginatedResponse<Review>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Review>>>(`/users/${userId}/reviews`, {
+    const response = await api.get<PaginatedApiResponse<Review>>(`/users/${userId}/reviews`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async markHelpful(reviewId: string): Promise<void> {

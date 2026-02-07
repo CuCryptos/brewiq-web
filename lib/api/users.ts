@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type {
   User,
   UserProfile,
@@ -49,17 +49,17 @@ export const usersApi = {
   },
 
   async getSavedBeers(page = 1, limit = 20): Promise<PaginatedResponse<Beer>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Beer>>>("/users/me/saved-beers", {
+    const response = await api.get<PaginatedApiResponse<Beer>>("/users/me/saved-beers", {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getWishlist(page = 1, limit = 20): Promise<PaginatedResponse<Beer>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Beer>>>("/users/me/wishlist", {
+    const response = await api.get<PaginatedApiResponse<Beer>>("/users/me/wishlist", {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async follow(userId: string): Promise<void> {
@@ -71,17 +71,17 @@ export const usersApi = {
   },
 
   async getFollowers(userId: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<User>>>(`/users/${userId}/followers`, {
+    const response = await api.get<PaginatedApiResponse<User>>(`/users/${userId}/followers`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getFollowing(userId: string, page = 1, limit = 20): Promise<PaginatedResponse<User>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<User>>>(`/users/${userId}/following`, {
+    const response = await api.get<PaginatedApiResponse<User>>(`/users/${userId}/following`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getLeaderboard(
@@ -96,10 +96,10 @@ export const usersApi = {
   },
 
   async getNotifications(page = 1, limit = 20): Promise<PaginatedResponse<Notification>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Notification>>>("/notifications", {
+    const response = await api.get<PaginatedApiResponse<Notification>>("/notifications", {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async markNotificationRead(notificationId: string): Promise<void> {

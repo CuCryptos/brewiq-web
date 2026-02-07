@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Sighting, SightingSearchParams, PaginatedResponse, BeerFormat } from "@/lib/types";
 
 export interface CreateSightingParams {
@@ -40,8 +40,8 @@ export const sightingsApi = {
   },
 
   async search(params: SightingSearchParams = {}): Promise<PaginatedResponse<Sighting>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Sighting>>>("/sightings", { params });
-    return response.data.data;
+    const response = await api.get<PaginatedApiResponse<Sighting>>("/sightings", { params });
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getNearby(
@@ -57,10 +57,10 @@ export const sightingsApi = {
   },
 
   async getForBeer(beerId: string, page = 1, limit = 20): Promise<PaginatedResponse<Sighting>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Sighting>>>(`/beers/${beerId}/sightings`, {
+    const response = await api.get<PaginatedApiResponse<Sighting>>(`/beers/${beerId}/sightings`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getById(sightingId: string): Promise<Sighting> {

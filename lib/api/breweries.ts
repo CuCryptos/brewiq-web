@@ -1,4 +1,4 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Brewery, Beer, PaginatedResponse } from "@/lib/types";
 
 export interface BrewerySearchParams {
@@ -14,8 +14,8 @@ export interface BrewerySearchParams {
 
 export const breweriesApi = {
   async search(params: BrewerySearchParams = {}): Promise<PaginatedResponse<Brewery>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Brewery>>>("/breweries", { params });
-    return response.data.data;
+    const response = await api.get<PaginatedApiResponse<Brewery>>("/breweries", { params });
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getBySlug(slug: string): Promise<Brewery> {
@@ -29,10 +29,10 @@ export const breweriesApi = {
   },
 
   async getBeers(breweryId: string, page = 1, limit = 20): Promise<PaginatedResponse<Beer>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Beer>>>(`/breweries/${breweryId}/beers`, {
+    const response = await api.get<PaginatedApiResponse<Beer>>(`/breweries/${breweryId}/beers`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getPopular(limit = 10): Promise<Brewery[]> {

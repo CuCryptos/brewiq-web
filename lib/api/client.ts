@@ -148,5 +148,19 @@ export interface ApiResponse<T> {
   data: T;
 }
 
+// Paginated API responses have data and meta as siblings at top level
+export interface PaginatedApiResponse<T> {
+  success: boolean;
+  data: T[];
+  meta: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}
+
 export { api };
 export default api;

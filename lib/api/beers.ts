@@ -1,10 +1,10 @@
-import { api, type ApiResponse } from "./client";
+import { api, type ApiResponse, type PaginatedApiResponse } from "./client";
 import type { Beer, BeerSearchParams, PaginatedResponse, Review } from "@/lib/types";
 
 export const beersApi = {
   async search(params: BeerSearchParams = {}): Promise<PaginatedResponse<Beer>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Beer>>>("/beers", { params });
-    return response.data.data;
+    const response = await api.get<PaginatedApiResponse<Beer>>("/beers", { params });
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getBySlug(slug: string): Promise<Beer> {
@@ -28,10 +28,10 @@ export const beersApi = {
   },
 
   async getReviews(beerId: string, page = 1, limit = 10): Promise<PaginatedResponse<Review>> {
-    const response = await api.get<ApiResponse<PaginatedResponse<Review>>>(`/beers/${beerId}/reviews`, {
+    const response = await api.get<PaginatedApiResponse<Review>>(`/beers/${beerId}/reviews`, {
       params: { page, limit },
     });
-    return response.data.data;
+    return { data: response.data.data, meta: response.data.meta };
   },
 
   async getSimilar(beerId: string, limit = 5): Promise<Beer[]> {
