@@ -323,7 +323,7 @@ export interface BeerSearchParams {
   minIbu?: number;
   maxIbu?: number;
   iqTier?: IQTier;
-  sortBy?: "name" | "iq_score" | "rating" | "newest";
+  sortBy?: "name" | "iqScore" | "abv" | "ibu" | "createdAt" | "updatedAt";
   sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;

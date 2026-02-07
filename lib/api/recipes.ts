@@ -6,7 +6,7 @@ export interface RecipeSearchParams {
   style?: string;
   userId?: string;
   isPublic?: boolean;
-  sortBy?: "name" | "created_at" | "brew_count" | "fork_count";
+  sortBy?: "name" | "style" | "difficulty" | "viewCount" | "brewCount" | "createdAt" | "updatedAt";
   sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;

@@ -15,9 +15,9 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import type { RecipeSearchParams } from "@/lib/api/recipes";
 
 const sortOptions = [
-  { value: "created_at", label: "Newest" },
-  { value: "brew_count", label: "Most Brewed" },
-  { value: "fork_count", label: "Most Forked" },
+  { value: "createdAt", label: "Newest" },
+  { value: "brewCount", label: "Most Brewed" },
+  { value: "viewCount", label: "Most Viewed" },
   { value: "name", label: "Name (A-Z)" },
 ];
 
@@ -41,7 +41,7 @@ function RecipesPageContent() {
   const initialParams: RecipeSearchParams = {
     query: searchParams.get("query") || undefined,
     style: searchParams.get("style") || undefined,
-    sortBy: (searchParams.get("sort") as RecipeSearchParams["sortBy"]) || "brew_count",
+    sortBy: (searchParams.get("sort") as RecipeSearchParams["sortBy"]) || "brewCount",
     isPublic: true,
   };
 
@@ -112,7 +112,7 @@ function RecipesPageContent() {
           />
           <Select
             options={sortOptions}
-            value={filters.sortBy || "brew_count"}
+            value={filters.sortBy || "brewCount"}
             onChange={(e) =>
               updateFilters({ sortBy: e.target.value as RecipeSearchParams["sortBy"] })
             }

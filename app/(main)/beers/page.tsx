@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils/cn";
 import type { BeerSearchParams, IQTier } from "@/lib/types";
 
 const sortOptions = [
-  { value: "iq_score", label: "IQ Score" },
-  { value: "rating", label: "Rating" },
-  { value: "newest", label: "Newest" },
+  { value: "iqScore", label: "IQ Score" },
+  { value: "createdAt", label: "Newest" },
+  { value: "abv", label: "ABV" },
   { value: "name", label: "Name (A-Z)" },
 ];
 
@@ -57,7 +57,7 @@ function BeersPageContent() {
     query: searchParams.get("query") || undefined,
     style: searchParams.get("style") || undefined,
     iqTier: (searchParams.get("tier") as IQTier) || undefined,
-    sortBy: (searchParams.get("sort") as BeerSearchParams["sortBy"]) || "iq_score",
+    sortBy: (searchParams.get("sort") as BeerSearchParams["sortBy"]) || "iqScore",
     minAbv: searchParams.get("minAbv") ? Number(searchParams.get("minAbv")) : undefined,
     maxAbv: searchParams.get("maxAbv") ? Number(searchParams.get("maxAbv")) : undefined,
   };
@@ -192,7 +192,7 @@ function BeersPageContent() {
             <Select
               label="Sort By"
               options={sortOptions}
-              value={filters.sortBy || "iq_score"}
+              value={filters.sortBy || "iqScore"}
               onChange={(e) =>
                 updateFilters({
                   sortBy: e.target.value as BeerSearchParams["sortBy"],

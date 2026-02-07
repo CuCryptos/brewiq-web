@@ -15,8 +15,8 @@ import type { BrewerySearchParams } from "@/lib/api/breweries";
 
 const sortOptions = [
   { value: "name", label: "Name (A-Z)" },
-  { value: "rating", label: "Rating" },
-  { value: "beers_count", label: "Most Beers" },
+  { value: "iqScore", label: "IQ Score" },
+  { value: "createdAt", label: "Newest" },
 ];
 
 const countryOptions = [
@@ -37,7 +37,7 @@ function BreweriesPageContent() {
   const initialParams: BrewerySearchParams = {
     query: searchParams.get("query") || undefined,
     country: searchParams.get("country") || undefined,
-    sortBy: (searchParams.get("sort") as BrewerySearchParams["sortBy"]) || "rating",
+    sortBy: (searchParams.get("sort") as BrewerySearchParams["sortBy"]) || "name",
   };
 
   const [filters, setFilters] = useState(initialParams);
@@ -114,7 +114,7 @@ function BreweriesPageContent() {
           />
           <Select
             options={sortOptions}
-            value={filters.sortBy || "rating"}
+            value={filters.sortBy || "name"}
             onChange={(e) =>
               updateFilters({
                 sortBy: e.target.value as BrewerySearchParams["sortBy"],

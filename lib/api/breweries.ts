@@ -6,7 +6,7 @@ export interface BrewerySearchParams {
   country?: string;
   state?: string;
   city?: string;
-  sortBy?: "name" | "rating" | "beers_count";
+  sortBy?: "name" | "iqScore" | "foundedYear" | "city" | "state" | "createdAt";
   sortOrder?: "asc" | "desc";
   page?: number;
   limit?: number;
