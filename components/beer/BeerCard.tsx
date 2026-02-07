@@ -11,12 +11,13 @@ import { formatABV } from "@/lib/utils/format";
 interface BeerCardProps {
   beer: Beer;
   variant?: "default" | "compact" | "horizontal";
+  priority?: boolean;
 }
 
-export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
+export function BeerCard({ beer, variant = "default", priority = false }: BeerCardProps) {
   if (variant === "horizontal") {
     return (
-      <Link href={`/beers/${beer.slug}`}>
+      <Link href={`/beers/${beer.slug}`} className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl block">
         <Card hover padding="sm" className="flex gap-4">
           <div className="relative h-20 w-20 shrink-0 rounded-lg overflow-hidden bg-muted">
             {beer.imageUrl ? (
@@ -26,6 +27,7 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
                 fill
                 className="object-cover"
                 sizes="80px"
+                priority={priority}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-muted-foreground">
@@ -54,7 +56,7 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
 
   if (variant === "compact") {
     return (
-      <Link href={`/beers/${beer.slug}`}>
+      <Link href={`/beers/${beer.slug}`} className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl block">
         <Card hover padding="sm" className="text-center">
           <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted mb-3">
             {beer.imageUrl ? (
@@ -64,6 +66,7 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
+                priority={priority}
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-muted-foreground">
@@ -86,7 +89,7 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
   }
 
   return (
-    <Link href={`/beers/${beer.slug}`}>
+    <Link href={`/beers/${beer.slug}`} className="focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-xl block">
       <Card hover padding="none" className="overflow-hidden">
         <div className="relative aspect-[4/3] w-full bg-muted">
           {beer.imageUrl ? (
@@ -96,6 +99,7 @@ export function BeerCard({ beer, variant = "default" }: BeerCardProps) {
               fill
               className="object-cover"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              priority={priority}
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-muted-foreground">

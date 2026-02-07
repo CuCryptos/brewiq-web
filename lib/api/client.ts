@@ -142,5 +142,11 @@ api.interceptors.response.use(
   }
 );
 
+// API wraps responses in { success: boolean, data: T }
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+}
+
 export { api };
 export default api;

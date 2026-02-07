@@ -9,21 +9,21 @@ const footerLinks = {
     { href: "/recipes", label: "Homebrew Recipes" },
   ],
   company: [
-    { href: "/about", label: "About Us" },
     { href: "/pricing", label: "Pricing" },
-    { href: "/blog", label: "Blog" },
-    { href: "/careers", label: "Careers" },
+    // { href: "/about", label: "About Us" },
+    // { href: "/blog", label: "Blog" },
+    // { href: "/careers", label: "Careers" },
   ],
   support: [
-    { href: "/help", label: "Help Center" },
-    { href: "/contact", label: "Contact Us" },
-    { href: "/api", label: "API" },
-    { href: "/status", label: "Status" },
+    // { href: "/help", label: "Help Center" },
+    // { href: "/contact", label: "Contact Us" },
+    // { href: "/api", label: "API" },
+    // { href: "/status", label: "Status" },
   ],
   legal: [
-    { href: "/terms", label: "Terms of Service" },
-    { href: "/privacy", label: "Privacy Policy" },
-    { href: "/cookies", label: "Cookie Policy" },
+    // { href: "/terms", label: "Terms of Service" },
+    // { href: "/privacy", label: "Privacy Policy" },
+    // { href: "/cookies", label: "Cookie Policy" },
   ],
 };
 

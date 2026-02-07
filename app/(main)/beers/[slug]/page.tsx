@@ -34,10 +34,11 @@ export default function BeerDetailPage() {
   const slug = params.slug as string;
   const { isAuthenticated } = useAuth();
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
 
   const { data: beer, isLoading } = useBeer(slug);
-  const { data: reviewsData, isLoading: reviewsLoading } = useBeerReviews(beer?.id || "", 1, 10);
-  const { data: similarBeers } = useSimilarBeers(beer?.id || "");
+  const { data: reviewsData, isLoading: reviewsLoading } = useBeerReviews(beer?.id || "", 1, 10, activeTab === "reviews");
+  const { data: similarBeers } = useSimilarBeers(beer?.id || "", 5, activeTab === "details");
 
   const saveMutation = useSaveBeer();
   const wishlistMutation = useAddToWishlist();
@@ -104,6 +105,7 @@ export default function BeerDetailPage() {
                 fill
                 className="object-cover"
                 priority
+                sizes="(max-width: 1024px) 100vw, 33vw"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-8xl">
@@ -200,7 +202,7 @@ export default function BeerDetailPage() {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="details">
+      <Tabs defaultValue="details" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="details">Details</TabsTrigger>
           <TabsTrigger value="reviews">Reviews ({beer.reviewCount})</TabsTrigger>

@@ -1,11 +1,5 @@
-import { api } from "./client";
+import { api, type ApiResponse } from "./client";
 import type { Subscription, SubscriptionPlan, SubscriptionTier } from "@/lib/types";
-
-// API wraps responses in { success: boolean, data: T }
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
 
 export const subscriptionsApi = {
   async getPlans(): Promise<SubscriptionPlan[]> {

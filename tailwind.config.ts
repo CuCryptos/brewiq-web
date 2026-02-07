@@ -102,8 +102,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-dm-sans)", "system-ui", "sans-serif"],
-        display: ["var(--font-cormorant)", "Georgia", "serif"],
-        editorial: ["var(--font-playfair)", "Georgia", "serif"],
+        display: ["Georgia", "serif"],
+        editorial: ["Georgia", "serif"],
         ui: ["var(--font-sora)", "system-ui", "sans-serif"],
       },
       borderRadius: {

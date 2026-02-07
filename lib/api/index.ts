@@ -1,4 +1,5 @@
 export { api, getAccessToken, getRefreshToken, setTokens, clearTokens } from "./client";
+export type { ApiResponse } from "./client";
 export { authApi } from "./auth";
 export { beersApi } from "./beers";
 export { breweriesApi } from "./breweries";

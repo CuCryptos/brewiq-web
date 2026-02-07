@@ -245,6 +245,7 @@ function BeersPageContent() {
                   clearFilter("query");
                 }}
                 className="ml-2 hover:text-foreground"
+                aria-label="Remove search filter"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -256,6 +257,7 @@ function BeersPageContent() {
               <button
                 onClick={() => clearFilter("style")}
                 className="ml-2 hover:text-foreground"
+                aria-label="Remove style filter"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -267,6 +269,7 @@ function BeersPageContent() {
               <button
                 onClick={() => clearFilter("iqTier")}
                 className="ml-2 hover:text-foreground"
+                aria-label="Remove tier filter"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -281,6 +284,7 @@ function BeersPageContent() {
                   clearFilter("maxAbv");
                 }}
                 className="ml-2 hover:text-foreground"
+                aria-label="Remove ABV filter"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -333,11 +337,12 @@ function BeersPageContent() {
                 : "grid-cols-1"
             )}
           >
-            {beers.map((beer) => (
+            {beers.map((beer, index) => (
               <BeerCard
                 key={beer.id}
                 beer={beer}
                 variant={viewMode === "list" ? "horizontal" : "default"}
+                priority={index < 4}
               />
             ))}
           </div>
@@ -361,7 +366,19 @@ function BeersPageContent() {
 
 export default function BeersPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array(8)
+              .fill(0)
+              .map((_, i) => (
+                <SkeletonBeerCard key={i} />
+              ))}
+          </div>
+        </div>
+      }
+    >
       <BeersPageContent />
     </Suspense>
   );

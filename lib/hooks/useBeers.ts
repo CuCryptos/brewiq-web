@@ -21,6 +21,7 @@ export function useBeers(params: BeerSearchParams = {}) {
   return useQuery({
     queryKey: beerKeys.list(params),
     queryFn: () => beersApi.search(params),
+    staleTime: 300000,
   });
 }
 
@@ -43,6 +44,7 @@ export function useBeer(slug: string) {
     queryKey: beerKeys.detail(slug),
     queryFn: () => beersApi.getBySlug(slug),
     enabled: !!slug,
+    staleTime: 300000,
   });
 }
 
@@ -60,19 +62,19 @@ export function useTopRatedBeers(limit = 10) {
   });
 }
 
-export function useBeerReviews(beerId: string, page = 1, limit = 10) {
+export function useBeerReviews(beerId: string, page = 1, limit = 10, enabled = true) {
   return useQuery({
     queryKey: [...beerKeys.reviews(beerId), page],
     queryFn: () => beersApi.getReviews(beerId, page, limit),
-    enabled: !!beerId,
+    enabled: !!beerId && enabled,
   });
 }
 
-export function useSimilarBeers(beerId: string, limit = 5) {
+export function useSimilarBeers(beerId: string, limit = 5, enabled = true) {
   return useQuery({
     queryKey: beerKeys.similar(beerId),
     queryFn: () => beersApi.getSimilar(beerId, limit),
-    enabled: !!beerId,
+    enabled: !!beerId && enabled,
   });
 }
 

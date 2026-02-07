@@ -165,7 +165,21 @@ function SightingsPageContent() {
 
 export default function SightingsPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="space-y-4">
+            {Array(5)
+              .fill(0)
+              .map((_, i) => (
+                <Card key={i}>
+                  <Skeleton className="h-32 w-full" />
+                </Card>
+              ))}
+          </div>
+        </div>
+      }
+    >
       <SightingsPageContent />
     </Suspense>
   );

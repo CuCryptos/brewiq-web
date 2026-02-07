@@ -1,4 +1,4 @@
-import { api, setTokens, clearTokens } from "./client";
+import { api, setTokens, clearTokens, type ApiResponse } from "./client";
 import type { User, LoginResponse, AuthTokens } from "@/lib/types";
 
 export interface LoginParams {
@@ -19,12 +19,6 @@ export interface ForgotPasswordParams {
 export interface ResetPasswordParams {
   token: string;
   password: string;
-}
-
-// API wraps responses in { success: boolean, data: T }
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
 }
 
 interface AuthData {

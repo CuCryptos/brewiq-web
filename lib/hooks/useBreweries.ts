@@ -18,6 +18,7 @@ export function useBreweries(params: BrewerySearchParams = {}) {
   return useQuery({
     queryKey: breweryKeys.list(params),
     queryFn: () => breweriesApi.search(params),
+    staleTime: 300000,
   });
 }
 
@@ -40,6 +41,7 @@ export function useBrewery(slug: string) {
     queryKey: breweryKeys.detail(slug),
     queryFn: () => breweriesApi.getBySlug(slug),
     enabled: !!slug,
+    staleTime: 300000,
   });
 }
 

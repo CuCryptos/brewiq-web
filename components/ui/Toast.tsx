@@ -78,6 +78,7 @@ export function Toast({ id, type, title, message, duration = 5000, onDismiss }: 
               setTimeout(() => onDismiss(id), 200);
             }}
             className="shrink-0 rounded p-1 hover:bg-black/5 transition-colors"
+            aria-label="Dismiss notification"
           >
             <X className="h-4 w-4" />
           </button>

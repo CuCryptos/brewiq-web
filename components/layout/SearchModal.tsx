@@ -174,7 +174,7 @@ export function SearchModal() {
         )}
       </div>
 
-      <div className="max-h-[60vh] overflow-y-auto">
+      <div className="max-h-[60vh] overflow-y-auto" aria-live="polite">
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-6 w-6 animate-spin text-amber" />

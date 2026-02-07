@@ -1,11 +1,5 @@
-import { api } from "./client";
+import { api, type ApiResponse } from "./client";
 import type { Brewery, Beer, PaginatedResponse } from "@/lib/types";
-
-// API wraps responses in { success: boolean, data: T }
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
 
 export interface BrewerySearchParams {
   query?: string;

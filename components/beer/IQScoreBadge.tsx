@@ -110,6 +110,11 @@ export function IQBreakdown({ breakdown, className }: IQBreakdownProps) {
             <div
               className={cn("h-full rounded-full transition-all", cat.color)}
               style={{ width: `${cat.value}%` }}
+              role="progressbar"
+              aria-valuenow={cat.value}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label={cat.label}
             />
           </div>
         </div>

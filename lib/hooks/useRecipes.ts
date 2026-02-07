@@ -18,6 +18,7 @@ export function useRecipes(params: RecipeSearchParams = {}) {
   return useQuery({
     queryKey: recipeKeys.list(params),
     queryFn: () => recipesApi.search(params),
+    staleTime: 300000,
   });
 }
 
@@ -40,6 +41,7 @@ export function useRecipe(slug: string) {
     queryKey: recipeKeys.detail(slug),
     queryFn: () => recipesApi.getBySlug(slug),
     enabled: !!slug,
+    staleTime: 300000,
   });
 }
 

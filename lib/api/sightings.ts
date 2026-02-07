@@ -1,11 +1,5 @@
-import { api } from "./client";
+import { api, type ApiResponse } from "./client";
 import type { Sighting, SightingSearchParams, PaginatedResponse, BeerFormat } from "@/lib/types";
-
-// API wraps responses in { success: boolean, data: T }
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
 
 export interface CreateSightingParams {
   beerId: string;

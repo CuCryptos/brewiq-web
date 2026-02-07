@@ -1,11 +1,5 @@
-import { api } from "./client";
+import { api, type ApiResponse } from "./client";
 import type { Scan, ScanResult, ScanType, PaginatedResponse } from "@/lib/types";
-
-// API wraps responses in { success: boolean, data: T }
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
 
 export interface CreateScanParams {
   image: File;

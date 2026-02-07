@@ -84,6 +84,7 @@ export default function BreweryDetailPage() {
               fill
               className="object-cover"
               priority
+              sizes="(max-width: 896px) 100vw, 896px"
             />
           )}
         </div>
@@ -201,8 +202,8 @@ export default function BreweryDetailPage() {
             />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
-              {beers.map((beer) => (
-                <BeerCard key={beer.id} beer={beer} variant="horizontal" />
+              {beers.map((beer, index) => (
+                <BeerCard key={beer.id} beer={beer} variant="horizontal" priority={index < 4} />
               ))}
             </div>
           )}

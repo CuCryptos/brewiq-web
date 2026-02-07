@@ -173,7 +173,19 @@ function RecipesPageContent() {
 
 export default function RecipesPage() {
   return (
-    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-6">
+          <div className="space-y-4">
+            {Array(5)
+              .fill(0)
+              .map((_, i) => (
+                <Skeleton key={i} className="h-40 w-full rounded-xl" />
+              ))}
+          </div>
+        </div>
+      }
+    >
       <RecipesPageContent />
     </Suspense>
   );

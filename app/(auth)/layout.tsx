@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-cream">
+    <div className="min-h-screen flex flex-col bg-foam">
       {/* Header */}
       <header className="py-6 px-4">
         <Link href="/" className="flex items-center justify-center gap-2">
