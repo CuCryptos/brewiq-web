@@ -1,8 +1,11 @@
 "use client";
 
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useCallback, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
 
 interface ModalProps {
   isOpen: boolean;
@@ -25,6 +28,80 @@ export function Modal({
   showCloseButton = true,
   size = "md",
 }: ModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<Element | null>(null);
+
+  // Save previously focused element when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement;
+    }
+  }, [isOpen]);
+
+  // Auto-focus first focusable element when modal opens
+  useEffect(() => {
+    if (!isOpen || !dialogRef.current) return;
+
+    const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+    if (focusableElements.length > 0) {
+      focusableElements[0].focus();
+    }
+  }, [isOpen]);
+
+  // Body scroll lock
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isOpen]);
+
+  // Focus restoration on close / unmount
+  useEffect(() => {
+    if (isOpen) return;
+
+    const elementToRestore = previousFocusRef.current;
+    if (elementToRestore && elementToRestore instanceof HTMLElement) {
+      elementToRestore.focus();
+      previousFocusRef.current = null;
+    }
+  }, [isOpen]);
+
+  // Escape key and focus trap
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusableElements = dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    },
+    [onClose]
+  );
+
   if (!isOpen) return null;
 
   const sizeClasses = {
@@ -45,8 +122,13 @@ export function Modal({
       />
 
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onKeyDown={handleKeyDown}
+      >
         <div
+          ref={dialogRef}
           className={cn(
             "relative w-full rounded-2xl bg-card shadow-xl animate-scale-in",
             sizeClasses[size],

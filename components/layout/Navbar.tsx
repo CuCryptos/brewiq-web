@@ -38,6 +38,8 @@ export function Navbar() {
   const { unreadCount } = useNotificationSocket();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const profileTriggerRef = useRef<HTMLButtonElement>(null);
+  const menuItemsRef = useRef<(HTMLAnchorElement | HTMLButtonElement | null)[]>([]);
 
   // Close profile dropdown when clicking outside
   useEffect(() => {
@@ -49,6 +51,61 @@ export function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Close dropdown when focus leaves the component
+  useEffect(() => {
+    if (!isProfileOpen) return;
+    function handleFocusOut(event: FocusEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.relatedTarget as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+    const node = profileRef.current;
+    node?.addEventListener("focusout", handleFocusOut);
+    return () => node?.removeEventListener("focusout", handleFocusOut);
+  }, [isProfileOpen]);
+
+  // Auto-focus first menu item when dropdown opens
+  useEffect(() => {
+    if (isProfileOpen) {
+      requestAnimationFrame(() => {
+        menuItemsRef.current[0]?.focus();
+      });
+    }
+  }, [isProfileOpen]);
+
+  const handleMenuKeyDown = (e: React.KeyboardEvent) => {
+    const items = menuItemsRef.current.filter(Boolean) as HTMLElement[];
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+
+    switch (e.key) {
+      case "ArrowDown": {
+        e.preventDefault();
+        const next = currentIndex + 1 < items.length ? currentIndex + 1 : 0;
+        items[next]?.focus();
+        break;
+      }
+      case "ArrowUp": {
+        e.preventDefault();
+        const prev = currentIndex - 1 >= 0 ? currentIndex - 1 : items.length - 1;
+        items[prev]?.focus();
+        break;
+      }
+      case "Home":
+        e.preventDefault();
+        items[0]?.focus();
+        break;
+      case "End":
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+        break;
+      case "Escape":
+        e.preventDefault();
+        setIsProfileOpen(false);
+        profileTriggerRef.current?.focus();
+        break;
+    }
+  };
 
   return (
     <nav className="sticky top-0 z-40 w-full border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
@@ -115,7 +172,10 @@ export function Navbar() {
                 {/* Profile dropdown */}
                 <div className="relative" ref={profileRef}>
                   <button
+                    ref={profileTriggerRef}
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    aria-haspopup="menu"
+                    aria-expanded={isProfileOpen}
                     className="flex items-center gap-2 rounded-lg p-1 hover:bg-muted transition-colors"
                   >
                     <Avatar
@@ -126,7 +186,12 @@ export function Navbar() {
                   </button>
 
                   {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card shadow-lg animate-scale-in origin-top-right">
+                    <div
+                      role="menu"
+                      aria-label="User menu"
+                      onKeyDown={handleMenuKeyDown}
+                      className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-card shadow-lg animate-scale-in origin-top-right"
+                    >
                       <div className="p-3 border-b border-border">
                         <p className="font-medium text-foreground truncate">
                           {user?.displayName || user?.username}
@@ -138,6 +203,9 @@ export function Navbar() {
                       <div className="p-2">
                         <Link
                           href="/profile"
+                          ref={(el) => { menuItemsRef.current[0] = el; }}
+                          role="menuitem"
+                          tabIndex={0}
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors"
                         >
@@ -146,6 +214,9 @@ export function Navbar() {
                         </Link>
                         <Link
                           href="/profile?tab=saved"
+                          ref={(el) => { menuItemsRef.current[1] = el; }}
+                          role="menuitem"
+                          tabIndex={0}
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors"
                         >
@@ -154,6 +225,9 @@ export function Navbar() {
                         </Link>
                         <Link
                           href="/achievements"
+                          ref={(el) => { menuItemsRef.current[2] = el; }}
+                          role="menuitem"
+                          tabIndex={0}
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors"
                         >
@@ -162,6 +236,9 @@ export function Navbar() {
                         </Link>
                         <Link
                           href="/profile/settings"
+                          ref={(el) => { menuItemsRef.current[3] = el; }}
+                          role="menuitem"
+                          tabIndex={0}
                           onClick={() => setIsProfileOpen(false)}
                           className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors"
                         >
@@ -171,6 +248,9 @@ export function Navbar() {
                       </div>
                       <div className="p-2 border-t border-border">
                         <button
+                          ref={(el) => { menuItemsRef.current[4] = el; }}
+                          role="menuitem"
+                          tabIndex={0}
                           onClick={() => {
                             setIsProfileOpen(false);
                             logout();

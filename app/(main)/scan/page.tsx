@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Camera, Image as ImageIcon, Menu, Beer, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -24,6 +24,31 @@ export default function ScanPage() {
   const [scanResult, setScanResult] = useState<ScanResultType | null>(null);
 
   const scanMutation = useCreateScan();
+  const scanTypes: ScanType[] = ["single", "menu", "shelf"];
+  const scanTypeRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const handleScanTypeKeyDown = (e: React.KeyboardEvent) => {
+    const currentIdx = scanTypes.indexOf(scanType);
+    let nextIdx = currentIdx;
+
+    switch (e.key) {
+      case "ArrowRight":
+      case "ArrowDown":
+        e.preventDefault();
+        nextIdx = (currentIdx + 1) % scanTypes.length;
+        break;
+      case "ArrowLeft":
+      case "ArrowUp":
+        e.preventDefault();
+        nextIdx = (currentIdx - 1 + scanTypes.length) % scanTypes.length;
+        break;
+      default:
+        return;
+    }
+
+    setScanType(scanTypes[nextIdx]);
+    scanTypeRefs.current[nextIdx]?.focus();
+  };
 
   if (authLoading) {
     return <PageLoader message="Loading..." />;
@@ -113,8 +138,12 @@ export default function ScanPage() {
       {/* Scan Type Selection */}
       <Card className="mb-6">
         <h3 className="font-medium text-foreground mb-3">What are you scanning?</h3>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Scan type" onKeyDown={handleScanTypeKeyDown}>
           <button
+            ref={(el) => { scanTypeRefs.current[0] = el; }}
+            role="radio"
+            aria-checked={scanType === "single"}
+            tabIndex={scanType === "single" ? 0 : -1}
             onClick={() => setScanType("single")}
             className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
               scanType === "single"
@@ -126,6 +155,10 @@ export default function ScanPage() {
             <span className="text-sm font-medium">Single Beer</span>
           </button>
           <button
+            ref={(el) => { scanTypeRefs.current[1] = el; }}
+            role="radio"
+            aria-checked={scanType === "menu"}
+            tabIndex={scanType === "menu" ? 0 : -1}
             onClick={() => setScanType("menu")}
             className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
               scanType === "menu"
@@ -137,6 +170,10 @@ export default function ScanPage() {
             <span className="text-sm font-medium">Menu</span>
           </button>
           <button
+            ref={(el) => { scanTypeRefs.current[2] = el; }}
+            role="radio"
+            aria-checked={scanType === "shelf"}
+            tabIndex={scanType === "shelf" ? 0 : -1}
             onClick={() => setScanType("shelf")}
             className={`flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-colors ${
               scanType === "shelf"

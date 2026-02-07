@@ -10,7 +10,7 @@ import { StarRating } from "./StarRating";
 import { FlavorTags } from "@/components/beer/FlavorTags";
 import type { Review } from "@/lib/types";
 import { formatRelativeTime } from "@/lib/utils/format";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { reviewsApi } from "@/lib/api/reviews";
 import { useUIStore } from "@/lib/stores/uiStore";
 
@@ -24,6 +24,38 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
   const [helpfulCount, setHelpfulCount] = useState(review.helpfulCount);
   const [isMarkedHelpful, setIsMarkedHelpful] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const actionsRef = useRef<HTMLDivElement>(null);
+  const actionsTriggerRef = useRef<HTMLButtonElement>(null);
+  const reportBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!showActions) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (actionsRef.current && !actionsRef.current.contains(event.target as Node)) {
+        setShowActions(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showActions]);
+
+  // Focus first menu item when dropdown opens
+  useEffect(() => {
+    if (showActions) {
+      requestAnimationFrame(() => {
+        reportBtnRef.current?.focus();
+      });
+    }
+  }, [showActions]);
+
+  const handleActionsKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      setShowActions(false);
+      actionsTriggerRef.current?.focus();
+    }
+  };
 
   const handleMarkHelpful = async () => {
     try {
@@ -77,17 +109,28 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
                 </span>
               </div>
             </div>
-            <div className="relative">
+            <div className="relative" ref={actionsRef}>
               <Button
+                ref={actionsTriggerRef}
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowActions(!showActions)}
+                aria-label="Review actions"
+                aria-haspopup="menu"
+                aria-expanded={showActions}
               >
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
               {showActions && (
-                <div className="absolute right-0 mt-1 w-32 rounded-lg border border-border bg-card shadow-lg z-10">
+                <div
+                  role="menu"
+                  aria-label="Review actions"
+                  onKeyDown={handleActionsKeyDown}
+                  className="absolute right-0 mt-1 w-32 rounded-lg border border-border bg-card shadow-lg z-10"
+                >
                   <button
+                    ref={reportBtnRef}
+                    role="menuitem"
                     onClick={handleReport}
                     className="flex w-full items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted"
                   >

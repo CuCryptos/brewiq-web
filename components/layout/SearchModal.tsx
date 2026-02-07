@@ -162,11 +162,18 @@ export function SearchModal() {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Search beers, breweries, recipes..."
+          aria-label="Search beers, breweries, and recipes"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls="search-results-list"
+          aria-expanded={results.length > 0}
+          aria-activedescendant={results.length > 0 ? `search-result-${selectedIndex}` : undefined}
           className="w-full h-14 pl-12 pr-12 text-lg bg-transparent border-b border-border focus:outline-none"
         />
         {query && (
           <button
             onClick={() => setQuery("")}
+            aria-label="Clear search"
             className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
           >
             <X className="h-5 w-5" />
@@ -180,10 +187,13 @@ export function SearchModal() {
             <Loader2 className="h-6 w-6 animate-spin text-amber" />
           </div>
         ) : results.length > 0 ? (
-          <div className="py-2">
+          <div className="py-2" id="search-results-list" role="listbox">
             {results.map((result, index) => (
               <button
                 key={`${result.type}-${result.id}`}
+                id={`search-result-${index}`}
+                role="option"
+                aria-selected={selectedIndex === index}
                 onClick={() => handleSelect(result)}
                 onMouseEnter={() => setSelectedIndex(index)}
                 className={cn(
