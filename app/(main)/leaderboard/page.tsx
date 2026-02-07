@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Trophy, Medal, Camera, Star, MapPin, Zap } from "lucide-react";
 import { Card } from "@/components/ui/Card";
