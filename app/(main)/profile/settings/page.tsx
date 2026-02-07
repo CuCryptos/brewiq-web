@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, User, Mail, Bell, CreditCard, Shield, LogOut } from "lucide-react";
+import { ArrowLeft, User, Mail, Bell, CreditCard, Shield, LogOut, Sparkles } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -15,6 +15,7 @@ import { useAuth, useRequireAuth } from "@/lib/hooks/useAuth";
 import { useUIStore } from "@/lib/stores/uiStore";
 import { usersApi } from "@/lib/api/users";
 import { subscriptionsApi } from "@/lib/api/subscriptions";
+import { imagesApi } from "@/lib/api/images";
 import { PageLoader } from "@/components/ui/Spinner";
 
 interface ProfileFormData {
@@ -30,6 +31,9 @@ export default function SettingsPage() {
 
   const [isUpdating, setIsUpdating] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isGeneratingAvatar, setIsGeneratingAvatar] = useState(false);
+  const [avatarPrompt, setAvatarPrompt] = useState("");
+  const [showAvatarPrompt, setShowAvatarPrompt] = useState(false);
 
   const { register, handleSubmit, formState: { isDirty } } = useForm<ProfileFormData>({
     defaultValues: {
@@ -70,6 +74,23 @@ export default function SettingsPage() {
       showError("Upload failed", "Could not upload your avatar.");
     } finally {
       setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleGenerateAvatar = async () => {
+    if (!avatarPrompt.trim()) return;
+    setIsGeneratingAvatar(true);
+    try {
+      const { imageUrl } = await imagesApi.generateAvatar(avatarPrompt);
+      const updated = await usersApi.updateProfile({ avatarUrl: imageUrl });
+      updateUser(updated);
+      showSuccess("Avatar generated", "Your new AI avatar has been set.");
+      setShowAvatarPrompt(false);
+      setAvatarPrompt("");
+    } catch {
+      showError("Generation failed", "Could not generate your avatar.");
+    } finally {
+      setIsGeneratingAvatar(false);
     }
   };
 
@@ -141,7 +162,42 @@ export default function SettingsPage() {
                 JPG, PNG. Max 5MB.
               </p>
             </div>
+            <div className="ml-auto">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowAvatarPrompt(!showAvatarPrompt)}
+              >
+                <Sparkles className="h-4 w-4 mr-1" />
+                AI Avatar
+              </Button>
+            </div>
           </div>
+
+          {showAvatarPrompt && (
+            <div className="mb-6 p-4 rounded-lg border border-border bg-muted/50">
+              <p className="text-sm font-medium text-foreground mb-2">
+                Describe your ideal avatar
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="e.g. A friendly brewmaster with a hop crown"
+                  value={avatarPrompt}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAvatarPrompt(e.target.value)}
+                />
+                <Button
+                  onClick={handleGenerateAvatar}
+                  isLoading={isGeneratingAvatar}
+                  disabled={!avatarPrompt.trim()}
+                >
+                  Generate
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Powered by Google Gemini AI
+              </p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input

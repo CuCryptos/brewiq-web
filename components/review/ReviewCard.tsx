@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ThumbsUp, Flag, MoreHorizontal } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Avatar } from "@/components/ui/Avatar";
@@ -150,6 +151,18 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
               <span className="text-lg">🍺</span>
               {review.beer.name}
             </Link>
+          )}
+
+          {review.imageUrl && (
+            <div className="mt-3 relative w-full aspect-video rounded-lg overflow-hidden">
+              <Image
+                src={review.imageUrl}
+                alt={`AI-generated image for ${review.beer?.name || 'beer'} review`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 600px"
+              />
+            </div>
           )}
 
           <p className="mt-3 text-foreground whitespace-pre-wrap">

@@ -114,6 +114,7 @@ export interface Review {
   rating: number;
   content: string;
   flavorTags?: string[];
+  imageUrl?: string;
   helpfulCount: number;
   isVerified: boolean;
   createdAt: string;
