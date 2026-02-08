@@ -11,6 +11,8 @@ import { formatRelativeTime, formatPrice, formatDistanceMiles } from "@/lib/util
 import { sightingsApi } from "@/lib/api/sightings";
 import { useUIStore } from "@/lib/stores/uiStore";
 import { useState } from "react";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { AuthPrompt, useAuthPrompt } from "@/components/ui/AuthPrompt";
 
 interface SightingCardProps {
   sighting: Sighting;
@@ -33,11 +35,17 @@ export function SightingCard({
   onConfirm,
   onReportMissing,
 }: SightingCardProps) {
+  const { isAuthenticated } = useAuth();
+  const { isOpen: authPromptOpen, config: authConfig, showAuthPrompt, closeAuthPrompt } = useAuthPrompt();
   const { showSuccess, showError } = useUIStore();
   const [isConfirming, setIsConfirming] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
 
   const handleConfirm = async () => {
+    if (!isAuthenticated) {
+      showAuthPrompt("Confirm Sighting", "Sign up to confirm beer sightings and help others find great beers.");
+      return;
+    }
     setIsConfirming(true);
     try {
       await sightingsApi.confirm(sighting.id);
@@ -51,6 +59,10 @@ export function SightingCard({
   };
 
   const handleReportMissing = async () => {
+    if (!isAuthenticated) {
+      showAuthPrompt("Report Sighting", "Sign up to report sighting updates.");
+      return;
+    }
     setIsReporting(true);
     try {
       await sightingsApi.reportMissing(sighting.id);
@@ -79,6 +91,7 @@ export function SightingCard({
   }
 
   return (
+    <>
     <Card hover>
       {/* Beer Info */}
       <div className="flex items-start gap-3 mb-4">
@@ -174,5 +187,7 @@ export function SightingCard({
         </Button>
       </div>
     </Card>
+    <AuthPrompt isOpen={authPromptOpen} onClose={closeAuthPrompt} title={authConfig.title} message={authConfig.message} />
+    </>
   );
 }

@@ -14,6 +14,8 @@ import { formatRelativeTime } from "@/lib/utils/format";
 import { useState, useRef, useEffect } from "react";
 import { reviewsApi } from "@/lib/api/reviews";
 import { useUIStore } from "@/lib/stores/uiStore";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { AuthPrompt, useAuthPrompt } from "@/components/ui/AuthPrompt";
 
 interface ReviewCardProps {
   review: Review;
@@ -21,6 +23,8 @@ interface ReviewCardProps {
 }
 
 export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
+  const { isAuthenticated } = useAuth();
+  const { isOpen: authPromptOpen, config: authConfig, showAuthPrompt, closeAuthPrompt } = useAuthPrompt();
   const { showSuccess, showError } = useUIStore();
   const [helpfulCount, setHelpfulCount] = useState(review.helpfulCount);
   const [isMarkedHelpful, setIsMarkedHelpful] = useState(false);
@@ -59,6 +63,10 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
   };
 
   const handleMarkHelpful = async () => {
+    if (!isAuthenticated) {
+      showAuthPrompt("Vote on Reviews", "Sign up to vote on reviews and help the community.");
+      return;
+    }
     try {
       if (isMarkedHelpful) {
         await reviewsApi.unmarkHelpful(review.id);
@@ -85,6 +93,7 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
   };
 
   return (
+    <>
     <Card padding="md">
       <div className="flex items-start gap-3">
         <Link href={`/profile/${review.user.username}`}>
@@ -197,5 +206,7 @@ export function ReviewCard({ review, showBeer = false }: ReviewCardProps) {
         </div>
       </div>
     </Card>
+    <AuthPrompt isOpen={authPromptOpen} onClose={closeAuthPrompt} title={authConfig.title} message={authConfig.message} />
+    </>
   );
 }

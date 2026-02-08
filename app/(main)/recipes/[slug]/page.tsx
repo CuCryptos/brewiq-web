@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { AuthPrompt, useAuthPrompt } from "@/components/ui/AuthPrompt";
 import { useRecipe, useForkRecipe } from "@/lib/hooks/useRecipes";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { formatABV, formatIBU, formatDate } from "@/lib/utils/format";
@@ -23,6 +24,7 @@ export default function RecipeDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const { isAuthenticated } = useAuth();
+  const { isOpen: authPromptOpen, config: authConfig, showAuthPrompt, closeAuthPrompt } = useAuthPrompt();
 
   const { data: recipe, isLoading } = useRecipe(slug);
   const forkMutation = useForkRecipe();
@@ -118,21 +120,26 @@ export default function RecipeDetailPage() {
 
       {/* Actions */}
       <div className="flex gap-2 mb-6">
-        {isAuthenticated && (
-          <>
-            <Button
-              onClick={() => forkMutation.mutate(recipe.id)}
-              isLoading={forkMutation.isPending}
-            >
-              <GitFork className="h-4 w-4 mr-2" />
-              Fork Recipe
-            </Button>
-            <Button variant="outline">
-              <Check className="h-4 w-4 mr-2" />
-              I Brewed This
-            </Button>
-          </>
-        )}
+        <Button
+          onClick={() => isAuthenticated
+            ? forkMutation.mutate(recipe.id)
+            : showAuthPrompt("Fork Recipe", "Sign up to fork recipes and make them your own.")
+          }
+          isLoading={forkMutation.isPending}
+        >
+          <GitFork className="h-4 w-4 mr-2" />
+          Fork Recipe
+        </Button>
+        <Button
+          variant="outline"
+          onClick={() => isAuthenticated
+            ? undefined
+            : showAuthPrompt("Track Your Brews", "Sign up to track which recipes you've brewed.")
+          }
+        >
+          <Check className="h-4 w-4 mr-2" />
+          I Brewed This
+        </Button>
         <Button variant="ghost" size="icon">
           <Share2 className="h-4 w-4" />
         </Button>
@@ -268,6 +275,8 @@ export default function RecipeDetailPage() {
           </p>
         </Card>
       )}
+
+      <AuthPrompt isOpen={authPromptOpen} onClose={closeAuthPrompt} title={authConfig.title} message={authConfig.message} />
     </div>
   );
 }

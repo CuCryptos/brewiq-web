@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
 import { Skeleton, SkeletonReview } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { AuthPrompt, useAuthPrompt } from "@/components/ui/AuthPrompt";
 import { IQScoreBadge, IQBreakdown } from "@/components/beer/IQScoreBadge";
 import { FlavorTags } from "@/components/beer/FlavorTags";
 import { BeerCard } from "@/components/beer/BeerCard";
@@ -38,6 +39,7 @@ export default function BeerDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
   const { isAuthenticated } = useAuth();
+  const { isOpen: authPromptOpen, config: authConfig, showAuthPrompt, closeAuthPrompt } = useAuthPrompt();
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
 
@@ -169,37 +171,38 @@ export default function BeerDetailPage() {
 
           {/* Actions */}
           <div className="flex flex-wrap gap-2 pt-2">
-            {isAuthenticated ? (
-              <>
-                <Button
-                  onClick={() => checkInMutation.mutate(beer.id)}
-                  isLoading={checkInMutation.isPending}
-                >
-                  <Check className="h-4 w-4 mr-2" />
-                  I&apos;ve had this
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => saveMutation.mutate(beer.id)}
-                  isLoading={saveMutation.isPending}
-                >
-                  <Bookmark className="h-4 w-4 mr-2" />
-                  Save
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => wishlistMutation.mutate(beer.id)}
-                  isLoading={wishlistMutation.isPending}
-                >
-                  <Heart className="h-4 w-4 mr-2" />
-                  Wishlist
-                </Button>
-              </>
-            ) : (
-              <Link href="/login">
-                <Button>Sign in to save</Button>
-              </Link>
-            )}
+            <Button
+              onClick={() => isAuthenticated
+                ? checkInMutation.mutate(beer.id)
+                : showAuthPrompt("Check In", "Sign up to track the beers you've tried.")
+              }
+              isLoading={checkInMutation.isPending}
+            >
+              <Check className="h-4 w-4 mr-2" />
+              I&apos;ve had this
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => isAuthenticated
+                ? saveMutation.mutate(beer.id)
+                : showAuthPrompt("Save Beer", "Sign up to save beers to your collection.")
+              }
+              isLoading={saveMutation.isPending}
+            >
+              <Bookmark className="h-4 w-4 mr-2" />
+              Save
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => isAuthenticated
+                ? wishlistMutation.mutate(beer.id)
+                : showAuthPrompt("Wishlist", "Sign up to add beers to your wishlist.")
+              }
+              isLoading={wishlistMutation.isPending}
+            >
+              <Heart className="h-4 w-4 mr-2" />
+              Wishlist
+            </Button>
             <Button variant="ghost" size="icon">
               <Share2 className="h-4 w-4" />
             </Button>
@@ -295,8 +298,14 @@ export default function BeerDetailPage() {
 
         <TabsContent value="reviews">
           {/* Review Form */}
-          {isAuthenticated && !showReviewForm && (
-            <Button onClick={() => setShowReviewForm(true)} className="mb-6">
+          {!showReviewForm && (
+            <Button
+              onClick={() => isAuthenticated
+                ? setShowReviewForm(true)
+                : showAuthPrompt("Write a Review", "Sign up to share your tasting notes and rate this beer.")
+              }
+              className="mb-6"
+            >
               Write a Review
             </Button>
           )}
@@ -325,15 +334,14 @@ export default function BeerDetailPage() {
               title="No reviews yet"
               description="Be the first to review this beer!"
               action={
-                isAuthenticated ? (
-                  <Button onClick={() => setShowReviewForm(true)}>
-                    Write a Review
-                  </Button>
-                ) : (
-                  <Link href="/login">
-                    <Button>Sign in to review</Button>
-                  </Link>
-                )
+                <Button
+                  onClick={() => isAuthenticated
+                    ? setShowReviewForm(true)
+                    : showAuthPrompt("Write a Review", "Sign up to share your tasting notes and rate this beer.")
+                  }
+                >
+                  Write a Review
+                </Button>
               }
             />
           ) : (
@@ -362,6 +370,8 @@ export default function BeerDetailPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AuthPrompt isOpen={authPromptOpen} onClose={closeAuthPrompt} title={authConfig.title} message={authConfig.message} />
     </div>
   );
 }
