@@ -44,7 +44,7 @@ export default function BeerDetailPage() {
   const [activeTab, setActiveTab] = useState("details");
 
   const { data: beer, isLoading } = useBeer(slug);
-  const { data: reviewsData, isLoading: reviewsLoading } = useBeerReviews(beer?.id || "", 1, 10, activeTab === "reviews");
+  const { data: reviewsData, isLoading: reviewsLoading } = useBeerReviews(beer?.slug || slug, 1, 10, activeTab === "reviews");
   const { data: similarBeers } = useSimilarBeers(beer?.id || "", 5, activeTab === "details");
 
   const saveMutation = useSaveBeer();
